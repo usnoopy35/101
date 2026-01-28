@@ -2,23 +2,25 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台北101單字攀登王 - 豪華夜景版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>台北101單字攀登王 - 極致夜景版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
         
-        /* --- 核心環境設定 --- */
+        /* --- 全域設定 --- */
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background: radial-gradient(circle at 50% 120%, #1a2a40 0%, #090c15 60%, #000000 100%);
+            background: radial-gradient(circle at 50% 120%, #020617 0%, #0f172a 50%, #000000 100%);
             overflow: hidden;
             touch-action: manipulation;
-            color: #e2e8f0;
+            color: #f1f5f9;
+            height: 100vh;
+            height: 100dvh;
         }
 
-        /* --- 動態星空背景 --- */
+        /* --- 背景動畫 --- */
         .stars {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -26,447 +28,405 @@
             z-index: 0;
             pointer-events: none;
             background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
-                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
-            background-size: 550px 550px, 350px 350px, 250px 250px;
-            background-position: 0 0, 40px 60px, 130px 270px;
-            animation: twinkle 60s linear infinite;
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0));
+            background-size: 200px 200px;
+            animation: twinkle 4s infinite;
+            opacity: 0.6;
         }
-
         @keyframes twinkle {
-            from { transform: translateY(0); }
-            to { transform: translateY(-550px); }
+            0% { opacity: 0.4; transform: translateY(0); }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.4; transform: translateY(-20px); }
         }
 
-        /* --- 101 大樓主體 CSS --- */
+        /* --- 101 大樓核心樣式 (重構版) --- */
+        :root {
+            --glass-base: #1e4e54;
+            --glass-highlight: #469ba5;
+            --glass-shadow: #0f282c;
+            --accent-gold: #fbbf24;
+            /* 移除原本的固定寬度設定，改為依賴百分比 */
+        }
+
         .tower-container {
             position: relative;
-            height: 100%;
-            overflow: hidden;
             display: flex;
-            flex-direction: column-reverse; /* 由下往上堆疊：第一個元素在最下面 */
+            flex-direction: column-reverse; 
             align-items: center;
-            padding-bottom: 50px; /* 底部緩衝 */
+            padding-bottom: 20vh;
+            width: 100%;
+            perspective: 1000px;
         }
 
-        /* 一般樓層 - 模擬藍綠色玻璃帷幕 */
+        /* 樓層樣式 - 強制適應窄欄位 */
         .floor {
-            width: 200px;
-            height: 40px;
-            /* 101 Teal Glass Color */
-            background: linear-gradient(90deg, rgba(14, 82, 78, 0.8) 0%, rgba(30, 126, 120, 0.9) 50%, rgba(14, 82, 78, 0.8) 100%);
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+            /* 關鍵修改：縮小最小值與最大值，使用 % 適應容器 */
+            width: clamp(90px, 90%, 220px); 
+            height: 30px;
+            background: linear-gradient(90deg, 
+                var(--glass-shadow) 0%, 
+                var(--glass-base) 20%, 
+                rgba(255,255,255,0.1) 40%, 
+                rgba(255,255,255,0.2) 50%, 
+                rgba(255,255,255,0.1) 60%, 
+                var(--glass-base) 80%, 
+                var(--glass-shadow) 100%
+            );
+            border-left: 1px solid rgba(255,255,255,0.1);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.5);
             display: flex;
             justify-content: center;
             align-items: center;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.75rem;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.6rem;
             position: relative;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            flex-shrink: 0;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
             z-index: 5;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        /* 窗戶紋理 */
+        .floor::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(90deg, transparent 0, transparent 19px, rgba(0,0,0,0.3) 20px);
+            opacity: 0.3;
         }
 
-        /* 當前樓層發光效果 */
-        .floor.active {
-            background: linear-gradient(90deg, rgba(234, 179, 8, 0.6) 0%, rgba(250, 204, 21, 0.8) 50%, rgba(234, 179, 8, 0.6) 100%);
-            color: #fff;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
-            box-shadow: 0 0 20px rgba(234, 179, 8, 0.6), inset 0 0 10px rgba(255,255,255,0.5);
-            border: 1px solid #fde047;
-            z-index: 10;
-        }
-
-        /* 101 特徵：竹節分隔層 (每8層) */
+        /* 節點擴張層 */
         .floor-segment-top {
-            width: 240px; /* 寬度增加，做出倒梯形視覺 */
-            border-top: 4px solid #d4af37; /* 金色邊框 */
-            border-bottom: 2px solid #d4af37;
-            margin-bottom: 4px; /* 與下一節分開 */
-            background: linear-gradient(90deg, #0f3d39 0%, #1a5c57 50%, #0f3d39 100%);
-            transform: perspective(500px) rotateX(5deg); /* 微調透視 */
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            /* 調整寬度以適應窄版 */
+            width: clamp(100px, 95%, 250px);
+            margin-bottom: 3px;
+            margin-top: 5px;
+            border-top: 3px solid var(--accent-gold);
+            border-bottom: 2px solid #0f172a;
+            background: linear-gradient(90deg, #112e32 0%, #306c74 50%, #112e32 100%);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
             z-index: 6;
+            position: relative;
         }
 
-        /* 如意紋飾 (角落裝飾) */
-        .floor-segment-top::before, .floor-segment-top::after {
-            content: '';
-            position: absolute;
-            top: -8px;
-            width: 16px;
-            height: 16px;
-            background: radial-gradient(circle, #ffd700 30%, #b8860b 100%);
+        /* 如意紋飾 */
+        .ruyi-ornament {
+            position: absolute; top: -8px; width: 100%; height: 100%; pointer-events: none;
+        }
+        .ruyi-ornament::before, .ruyi-ornament::after {
+            content: ''; position: absolute; top: 2px; width: 16px; height: 16px;
+            background: radial-gradient(circle, #fcd34d 30%, #b45309 100%);
             border-radius: 50%;
-            box-shadow: 0 0 10px #ffd700;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+            border: 1px solid rgba(255,255,255,0.4);
         }
-        .floor-segment-top::before { left: -8px; }
-        .floor-segment-top::after { right: -8px; }
+        .ruyi-ornament::before { left: -6px; }
+        .ruyi-ornament::after { right: -6px; }
 
-        /* 底部基座 (1-5樓) */
-        .floor-base {
-            width: 260px;
-            background: linear-gradient(90deg, #1f2937 0%, #374151 50%, #1f2937 100%);
-            border: 1px solid #4b5563;
-        }
-
-        /* --- 101 尖塔造型 (Spire) --- */
-        .spire-container {
+        /* 基座 (Foundation) */
+        .tower-base-foundation {
+            /* 調整寬度以適應窄版 */
+            width: clamp(120px, 98%, 300px);
+            height: 60px;
+            background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-top: 4px solid var(--accent-gold);
             display: flex;
-            flex-direction: column-reverse; /* 保持與大樓一致的方向邏輯，但內部是正向堆疊 */
             align-items: center;
-            margin-bottom: -2px; /* 連接縫隙 */
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            margin-bottom: -1px; 
             z-index: 4;
         }
-        
+        .tower-base-foundation::after {
+            content: 'TAIPEI 101'; /* 縮短文字以免換行 */
+            font-size: 0.4rem;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 20px;
+        }
+
+        /* 尖塔 (Spire) */
+        .spire-container {
+            display: flex; flex-direction: column-reverse; align-items: center;
+            transform: translateY(2px); z-index: 3;
+        }
         .spire-base {
-            width: 100px;
-            height: 30px;
-            background: linear-gradient(90deg, #0f3d39 0%, #1a5c57 50%, #0f3d39 100%);
-            border: 2px solid #d4af37;
-            border-bottom: none;
-            clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%); /* 梯形 */
+            width: clamp(40px, 40%, 80px); height: 20px;
+            background: #1e293b; border: 2px solid var(--accent-gold);
         }
-
         .spire-tier {
-            width: 60px;
-            height: 40px;
-            background: linear-gradient(90deg, #d4af37, #fcd34d, #d4af37);
-            border: 1px solid #fff;
-            margin-bottom: -1px;
+            width: clamp(30px, 30%, 50px); height: 25px;
+            background: linear-gradient(90deg, #b45309, #fcd34d, #b45309);
         }
-
         .spire-needle {
-            width: 8px;
-            height: 120px;
-            background: linear-gradient(to top, #d4af37, #fff); /* 金色漸層到白光 */
-            box-shadow: 0 0 20px rgba(253, 224, 71, 0.8);
+            width: 4px; height: 60px;
+            background: #fcd34d;
+            box-shadow: 0 0 20px #fcd34d;
             border-radius: 4px 4px 0 0;
-            position: relative;
-        }
-        
-        /* 避雷針頂端閃爍 */
-        .spire-needle::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 4px; height: 4px;
-            background: white;
-            box-shadow: 0 0 20px 5px white;
-            border-radius: 50%;
-            animation: pulse-light 2s infinite;
         }
 
-        @keyframes pulse-light {
-            0% { opacity: 0.5; transform: translateX(-50%) scale(1); }
-            50% { opacity: 1; transform: translateX(-50%) scale(2); }
-            100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
-        }
-
-        /* 攀爬者容器 */
-        #climber {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            transition: bottom 0.5s ease-in-out;
+        /* 活躍樓層與攀登者 */
+        .floor.active {
+            background: linear-gradient(90deg, #fef08a 0%, #ffffff 50%, #fef08a 100%);
+            color: #000; font-weight: 900;
+            box-shadow: 0 0 30px rgba(253, 224, 71, 0.6);
+            border: 1px solid #fff;
+            transform: scale(1.03);
             z-index: 20;
-            /* 更有力的呼吸律動 */
-            animation: climb-pulse 2s infinite ease-in-out;
         }
-
-        @keyframes climb-pulse {
-            0%, 100% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.02) translateY(-2px); }
+        #climber {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            z-index: 30; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
-        /* 攀爬者造型設定 */
         .climber-avatar {
-            width: 90px;
-            height: 90px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            filter: drop-shadow(0 0 10px rgba(255, 50, 50, 0.6)); /* 紅色光暈 */
-        }
-        
-        /* 針對 SVG 的樣式 */
-        .climber-svg {
-            width: 100%;
-            height: 100%;
-            fill: none;
-            stroke: #ef4444; /* 鮮豔的紅色 */
-            stroke-width: 2.8; /* 加粗線條增加力量感 */
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            /* 增加白色描邊效果，讓它在深色背景更立體 */
-            filter: drop-shadow(1px 1px 0px rgba(255,255,255,0.3));
+            width: 32px; height: 32px; /* 稍微縮小適應手機 */
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
         }
 
-        .climber-head {
-            fill: #ef4444;
-            stroke: none;
-        }
-
-        /* --- UI 元件優化 --- */
+        /* --- UI 面板質感優化 --- */
         .glass-panel {
             background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
-
-        .neon-text-gold {
-            color: #fbbf24;
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-        }
-
-        .neon-text-blue {
-            color: #60a5fa;
-            text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
-        }
-
-        /* 按鈕特效 */
-        .mode-btn {
-            position: relative;
-            overflow: hidden;
+        
+        .glass-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
         }
-        .mode-btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: 0.5s;
-        }
-        .mode-btn:hover::before {
-            left: 100%;
-        }
+        .glass-btn:active { transform: scale(0.96); }
 
-        /* 答錯震動 */
-        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
+        /* 難度選擇卡片 */
+        .diff-card {
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .diff-card.selected {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3);
         }
 
-        /* 勝利畫面特效樣式 */
-        .reward-sunrise { background: linear-gradient(135deg, #f59e0b, #ec4899); }
-        .reward-galaxy { background: linear-gradient(135deg, #312e81, #4c1d95, #be185d); }
-        .reward-cyber { background: linear-gradient(135deg, #000000, #06b6d4, #d946ef); }
-        .reward-fireworks { background: linear-gradient(135deg, #111827, #374151); }
+        /* 霓虹文字 */
+        .neon-gold { color: #fcd34d; text-shadow: 0 0 10px rgba(252, 211, 77, 0.5); }
+        .neon-cyan { color: #22d3ee; text-shadow: 0 0 10px rgba(34, 211, 238, 0.5); }
 
-        /* 特殊動畫 */
-        @keyframes sun-rise {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 0px; background: transparent; } /* 隱藏卷軸保持美觀 */
+
+        @media (max-width: 768px) {
+            .floor { height: 26px; }
+            h1 { font-size: 1.5rem; }
+            /* 移除原本的高度強制設定，讓它自然跟隨 flex-row */
         }
-        .animate-sunrise { animation: sun-rise 1.5s ease-out forwards; }
-
-        @keyframes laser-beam {
-            0% { opacity: 0.3; transform: rotate(-10deg); }
-            50% { opacity: 1; transform: rotate(10deg); }
-            100% { opacity: 0.3; transform: rotate(-10deg); }
-        }
-        .animate-laser { animation: laser-beam 2s infinite linear; }
-
-        /* 自定義捲軸 */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
-
     </style>
 </head>
-<body class="h-screen w-full flex flex-col md:flex-row text-white overflow-hidden relative">
+<body class="w-full flex flex-row text-white relative"> <!-- 強制 flex-row，移除 flex-col -->
 
-    <!-- Starry Background Layer -->
+    <!-- Stars -->
     <div class="stars"></div>
 
-    <!-- Clouds Layer (Optional decoration) -->
-    <div class="absolute top-20 right-0 opacity-20 pointer-events-none animate-[pulse_10s_infinite]">
-        <i class="fas fa-cloud text-9xl"></i>
-    </div>
-    <div class="absolute bottom-40 left-10 opacity-10 pointer-events-none animate-[pulse_15s_infinite]">
-        <i class="fas fa-cloud text-8xl"></i>
-    </div>
-
-    <!-- Left Panel: Game Controls & Interface -->
-    <div class="w-full md:w-2/3 h-full flex flex-col justify-center items-center p-4 relative z-20">
+    <!-- UI Container (Left) -->
+    <!-- 設定左側寬度為 7/12 (約 58%)，並移除 md: 前綴以適用於手機 -->
+    <div id="game-ui-container" class="w-7/12 h-full flex flex-col relative z-20 transition-all duration-500">
         
-        <!-- Game HUD -->
-        <div id="game-hud" class="hidden absolute top-0 left-0 w-full p-4 md:p-6 flex justify-between items-start z-30 pointer-events-none">
-            
-            <!-- Floor Counter -->
-            <div class="glass-panel p-3 rounded-2xl pointer-events-auto flex flex-col items-center min-w-[80px]">
-                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Floor</p>
-                <p class="text-3xl font-black neon-text-gold"><span id="current-floor-display">1</span><span class="text-sm ml-1">F</span></p>
+        <!-- HUD -->
+        <div id="game-hud" class="hidden w-full p-2 flex justify-between items-center z-30">
+            <div class="glass-panel px-2 py-1 rounded-xl flex flex-col items-center min-w-[50px]">
+                <p class="text-[8px] text-gray-400 font-bold tracking-widest">FLOOR</p>
+                <p class="text-xl font-black neon-gold leading-none mt-1"><span id="current-floor-display">1</span><span class="text-[10px] ml-0.5">F</span></p>
             </div>
 
-            <!-- Timer -->
-            <div class="glass-panel p-2 px-6 rounded-full pointer-events-auto flex items-center space-x-3 border border-blue-500/30">
-                <i class="far fa-clock text-blue-400"></i>
-                <p id="timer-display" class="text-2xl font-mono font-bold neon-text-blue">00:00</p>
+            <div class="glass-panel px-3 py-1 rounded-full flex items-center space-x-2 border border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
+                <i class="far fa-clock text-cyan-400 text-xs"></i>
+                <p id="timer-display" class="text-lg font-mono font-bold neon-cyan tracking-widest">00:00</p>
             </div>
 
-            <!-- Lives & Sound -->
-            <div class="flex flex-col items-end space-y-3 pointer-events-auto">
-                <div class="glass-panel p-2 px-3 rounded-full flex space-x-1" id="lives-container">
-                    <!-- Lives injected here -->
-                </div>
-                <button onclick="toggleSound()" class="glass-panel p-3 rounded-full hover:bg-white/10 transition w-10 h-10 flex items-center justify-center text-gray-300 hover:text-white">
+            <div class="flex items-center gap-2">
+                <div class="glass-panel px-2 py-1 rounded-full flex space-x-0.5" id="lives-container"></div>
+                <button onclick="toggleSound()" class="glass-panel w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition">
                     <i id="sound-icon" class="fas fa-volume-up text-xs"></i>
                 </button>
             </div>
         </div>
 
         <!-- Start Screen -->
-        <div id="start-screen" class="glass-panel p-8 rounded-3xl max-w-md w-full text-center relative z-40 overflow-y-auto max-h-[90vh] shadow-[0_0_50px_rgba(0,0,0,0.5)] border-t border-white/20">
-            <div class="mb-6">
-                <i class="fas fa-building text-5xl text-teal-400 mb-2 drop-shadow-[0_0_10px_rgba(45,212,191,0.5)]"></i>
-                <h1 class="text-4xl font-black tracking-widest text-white mt-2">TAIPEI <span class="text-yellow-400">101</span></h1>
-                <p class="text-sm text-gray-400 tracking-[0.2em] uppercase mt-1">Word Climber Challenge</p>
-            </div>
-            
-            <div class="space-y-4 mb-8">
-                <button onclick="startGame(1)" class="mode-btn w-full py-4 bg-gradient-to-r from-teal-900 to-teal-800 border border-teal-500/30 rounded-xl hover:scale-[1.02] active:scale-95 shadow-lg group">
-                    <div class="flex items-center px-4">
-                        <div class="bg-teal-500/20 w-10 h-10 rounded-lg flex items-center justify-center mr-4 text-teal-300 group-hover:bg-teal-400 group-hover:text-black transition">1</div>
-                        <div class="text-left">
-                            <span class="block text-xs text-teal-400 uppercase">Mode 01</span>
-                            <span class="text-lg font-bold text-white">看英文 選中文</span>
-                        </div>
-                    </div>
-                </button>
+        <div id="start-screen" class="absolute inset-0 flex items-center justify-center p-3 z-40">
+            <div class="glass-panel p-4 rounded-[1.5rem] max-w-sm w-full text-center relative overflow-hidden border border-white/10 shadow-2xl h-full flex flex-col justify-center overflow-y-auto custom-scroll">
+                <!-- Decorative Glow -->
+                <div class="absolute top-[-50px] left-[50%] transform translate-x-[-50%] w-[150px] h-[150px] bg-teal-500/20 blur-[60px] rounded-full pointer-events-none"></div>
 
-                <button onclick="startGame(2)" class="mode-btn w-full py-4 bg-gradient-to-r from-blue-900 to-blue-800 border border-blue-500/30 rounded-xl hover:scale-[1.02] active:scale-95 shadow-lg group">
-                    <div class="flex items-center px-4">
-                        <div class="bg-blue-500/20 w-10 h-10 rounded-lg flex items-center justify-center mr-4 text-blue-300 group-hover:bg-blue-400 group-hover:text-black transition">2</div>
-                        <div class="text-left">
-                            <span class="block text-xs text-blue-400 uppercase">Mode 02</span>
-                            <span class="text-lg font-bold text-white">看中文 選英文</span>
-                        </div>
+                <div class="relative z-10 mb-4 shrink-0">
+                    <div class="inline-block p-2 rounded-xl bg-gradient-to-br from-teal-500/20 to-transparent border border-teal-500/30 mb-1">
+                        <i class="fas fa-building text-2xl text-teal-400 drop-shadow-[0_0_15px_rgba(45,212,191,0.6)]"></i>
                     </div>
-                </button>
-
-                <button onclick="startGame(3)" class="mode-btn w-full py-4 bg-gradient-to-r from-purple-900 to-purple-800 border border-purple-500/30 rounded-xl hover:scale-[1.02] active:scale-95 shadow-lg group">
-                    <div class="flex items-center px-4">
-                        <div class="bg-purple-500/20 w-10 h-10 rounded-lg flex items-center justify-center mr-4 text-purple-300 group-hover:bg-purple-400 group-hover:text-black transition">3</div>
-                        <div class="text-left">
-                            <span class="block text-xs text-purple-400 uppercase">Mode 03</span>
-                            <span class="text-lg font-bold text-white">看中文 打英文</span>
-                        </div>
-                    </div>
-                </button>
-            </div>
-
-            <div class="border-t border-white/10 pt-4">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Leaderboard</h3>
-                    <i class="fas fa-crown text-yellow-500 text-sm"></i>
+                    <h1 class="text-2xl font-black tracking-[0.1em] text-white mt-1">TAIPEI <span class="text-yellow-400">101</span></h1>
+                    <p class="text-[8px] text-teal-200/60 tracking-[0.3em] uppercase font-bold">Vocabulary Challenge</p>
                 </div>
-                <div class="bg-black/40 rounded-xl p-1 max-h-[120px] overflow-y-auto">
-                    <table class="w-full text-xs text-left" id="leaderboard-table">
-                        <tbody id="leaderboard-body" class="text-gray-300">
-                            <tr><td colspan="3" class="text-center py-3 text-gray-600">Waiting for challenger...</td></tr>
-                        </tbody>
-                    </table>
+                
+                <!-- Difficulty Selection -->
+                <div class="mb-4 shrink-0">
+                    <div class="flex items-center justify-between mb-2 px-1">
+                        <h3 class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Select Difficulty</h3>
+                        <div class="h-[1px] flex-1 bg-white/10 ml-3"></div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1.5">
+                        <!-- Diff 1 -->
+                        <button onclick="selectDifficulty(1)" id="diff-btn-1" class="diff-card group relative p-2 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10">
+                            <div class="mb-1 group-hover:scale-110 transition duration-300">
+                                <i class="fas fa-hand-rock text-2xl text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]"></i>
+                            </div>
+                            <div class="text-[10px] font-bold text-gray-300">徒手</div>
+                            <div class="text-[8px] text-red-400 font-mono tracking-tighter">1 LIFE</div>
+                        </button>
+                        
+                        <!-- Diff 3 -->
+                        <button onclick="selectDifficulty(3)" id="diff-btn-3" class="diff-card group relative p-2 rounded-lg bg-teal-500/10 border border-teal-500/50 shadow-[0_0_15px_rgba(20,184,166,0.2)]">
+                            <div class="absolute top-0 right-0 w-2 h-2 bg-teal-400 rounded-bl-lg"></div>
+                            <div class="mb-1 group-hover:scale-110 transition duration-300">
+                                <i class="fas fa-link text-2xl text-teal-400 drop-shadow-[0_0_10px_rgba(45,212,191,0.8)]"></i>
+                            </div>
+                            <div class="text-[10px] font-bold text-white">帶繩</div>
+                            <div class="text-[8px] text-teal-300 font-mono tracking-tighter">3 LIVES</div>
+                        </button>
+                        
+                        <!-- Diff 5 -->
+                        <button onclick="selectDifficulty(5)" id="diff-btn-5" class="diff-card group relative p-2 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10">
+                            <div class="mb-1 group-hover:scale-110 transition duration-300">
+                                <i class="fas fa-shoe-prints text-2xl text-green-400 drop-shadow-[0_0_10px_rgba(34,197,94,0.8)] rotate-[-30deg]"></i>
+                            </div>
+                            <div class="text-[10px] font-bold text-gray-300">樓梯</div>
+                            <div class="text-[8px] text-green-400 font-mono tracking-tighter">5 LIVES</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Game Mode Buttons -->
+                <div class="space-y-2 mb-4 shrink-0">
+                    <button onclick="startGame(1)" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 border border-white/10 hover:border-teal-400/50 group transition-all duration-300 hover:shadow-[0_0_20px_rgba(45,212,191,0.15)] flex items-center">
+                        <span class="w-5 h-5 rounded flex items-center justify-center bg-teal-500/20 text-teal-300 text-[10px] font-bold mr-2">1</span>
+                        <span class="text-xs font-bold text-gray-200 group-hover:text-white tracking-wide text-left flex-1">英翻中 <span class="text-[9px] opacity-50 block sm:inline font-normal">(Reading)</span></span>
+                        <i class="fas fa-chevron-right ml-auto text-[10px] text-gray-600 group-hover:text-teal-400 transition-transform group-hover:translate-x-1"></i>
+                    </button>
+
+                    <button onclick="startGame(2)" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 border border-white/10 hover:border-blue-400/50 group transition-all duration-300 hover:shadow-[0_0_20px_rgba(96,165,250,0.15)] flex items-center">
+                        <span class="w-5 h-5 rounded flex items-center justify-center bg-blue-500/20 text-blue-300 text-[10px] font-bold mr-2">2</span>
+                        <span class="text-xs font-bold text-gray-200 group-hover:text-white tracking-wide text-left flex-1">中翻英 <span class="text-[9px] opacity-50 block sm:inline font-normal">(Recall)</span></span>
+                        <i class="fas fa-chevron-right ml-auto text-[10px] text-gray-600 group-hover:text-blue-400 transition-transform group-hover:translate-x-1"></i>
+                    </button>
+
+                    <button onclick="startGame(3)" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 border border-white/10 hover:border-purple-400/50 group transition-all duration-300 hover:shadow-[0_0_20px_rgba(192,132,252,0.15)] flex items-center">
+                        <span class="w-5 h-5 rounded flex items-center justify-center bg-purple-500/20 text-purple-300 text-[10px] font-bold mr-2">3</span>
+                        <span class="text-xs font-bold text-gray-200 group-hover:text-white tracking-wide text-left flex-1">拼字輸入 <span class="text-[9px] opacity-50 block sm:inline font-normal">(Typing)</span></span>
+                        <i class="fas fa-chevron-right ml-auto text-[10px] text-gray-600 group-hover:text-purple-400 transition-transform group-hover:translate-x-1"></i>
+                    </button>
+                </div>
+
+                <!-- Mini Leaderboard -->
+                <div class="border-t border-white/10 pt-2 flex-1 min-h-0 flex flex-col">
+                    <div class="flex justify-between items-center mb-1 px-1">
+                        <h3 class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Top Records</h3>
+                    </div>
+                    <div class="bg-black/30 rounded-xl p-1 overflow-y-auto custom-scroll flex-1">
+                        <table class="w-full text-left">
+                            <tbody id="leaderboard-body" class="text-gray-400 text-[9px]"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Game Interface -->
-        <div id="game-ui" class="hidden w-full max-w-2xl flex flex-col items-center z-30 mt-20 md:mt-0">
+        <!-- Gameplay UI -->
+        <div id="game-ui" class="hidden flex-1 flex-col items-center justify-center p-3 w-full max-w-2xl mx-auto z-30 h-full">
             
             <!-- Question Card -->
-            <div class="w-full glass-panel rounded-3xl p-6 md:p-10 mb-6 relative overflow-hidden min-h-[240px] flex flex-col justify-center items-center text-center shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-                <!-- Progress Bar Top -->
-                <div class="absolute top-0 left-0 w-full h-1 bg-gray-700">
-                    <div id="progress-bar" class="h-full bg-gradient-to-r from-teal-400 to-blue-500 transition-all duration-300 shadow-[0_0_10px_#2dd4bf]" style="width: 0%"></div>
+            <div class="w-full glass-panel rounded-2xl p-4 mb-3 relative overflow-hidden flex flex-col justify-center items-center text-center min-h-[160px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-white/15 shrink-0">
+                <!-- Progress Line -->
+                <div class="absolute top-0 left-0 w-full h-[2px] bg-white/5">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-teal-400 to-cyan-400 shadow-[0_0_10px_rgba(45,212,191,0.8)] transition-all duration-500" style="width: 0%"></div>
                 </div>
                 
-                <span id="q-category" class="absolute top-4 right-6 text-[10px] font-bold text-teal-300 border border-teal-500/50 px-2 py-1 rounded bg-teal-900/30 uppercase tracking-wider">Noun</span>
+                <span id="q-category" class="absolute top-2 right-3 text-[9px] font-bold text-teal-300 border border-teal-500/30 px-1.5 py-0.5 rounded-md bg-teal-950/50 uppercase tracking-wider backdrop-blur-md">Noun</span>
                 
-                <h2 id="question-text" class="text-4xl md:text-5xl font-black mb-6 text-white tracking-wide break-words w-full drop-shadow-lg">Loading...</h2>
+                <div class="flex-1 flex items-center justify-center w-full my-2">
+                    <h2 id="question-text" class="text-2xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 tracking-wide leading-tight drop-shadow-sm break-words px-2">Loading...</h2>
+                </div>
                 
-                <button onclick="speakCurrentWord()" class="mt-2 w-14 h-14 rounded-full bg-white/5 border border-white/10 text-teal-300 hover:bg-teal-500 hover:text-white hover:border-teal-400 transition flex items-center justify-center group">
-                    <i class="fas fa-volume-up text-xl group-hover:scale-110 transition"></i>
+                <button onclick="speakCurrentWord()" class="absolute bottom-2 right-3 w-7 h-7 rounded-full bg-white/5 hover:bg-teal-500 text-gray-400 hover:text-white transition flex items-center justify-center">
+                    <i class="fas fa-volume-up text-[10px]"></i>
                 </button>
             </div>
 
-            <!-- Options Area -->
-            <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full px-2">
-                <!-- Options injected via JS -->
+            <!-- Options Grid -->
+            <div id="options-grid" class="grid grid-cols-1 gap-2 w-full flex-1 overflow-y-auto custom-scroll mb-2">
+                <!-- Buttons injected via JS -->
             </div>
 
-            <!-- Input Area -->
-            <div id="input-area" class="hidden w-full flex space-x-3 px-2">
-                <input type="text" id="answer-input" class="flex-1 p-5 rounded-2xl bg-black/50 border border-white/20 text-white text-xl outline-none focus:border-teal-400 focus:shadow-[0_0_15px_rgba(45,212,191,0.3)] transition placeholder-gray-600" placeholder="Type answer here..." autocomplete="off">
-                <button onclick="checkTypingAnswer()" class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-bold py-3 px-8 rounded-2xl hover:scale-105 transition shadow-lg whitespace-nowrap">
-                    GO
-                </button>
+            <!-- Typing Input -->
+            <div id="input-area" class="hidden w-full gap-2 mb-2">
+                <input type="text" id="answer-input" class="flex-1 p-3 rounded-xl bg-slate-900/80 border border-white/20 text-white text-lg text-center outline-none focus:border-teal-400 focus:shadow-[0_0_20px_rgba(45,212,191,0.2)] transition placeholder-gray-600" placeholder="Type..." autocomplete="off">
+                <button onclick="checkTypingAnswer()" class="bg-yellow-500 hover:bg-yellow-400 text-black font-black py-2 px-4 rounded-xl shadow-lg transition active:scale-95">GO</button>
             </div>
 
-            <!-- Feedback Message -->
-            <div id="feedback" class="h-10 mt-4 font-bold text-2xl text-center drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] transition-all duration-300 opacity-0 tracking-widest uppercase"></div>
+            <!-- Feedback Text -->
+            <div id="feedback" class="h-6 flex items-center justify-center font-black text-xl tracking-[0.2em] opacity-0 transition-all duration-300 transform translate-y-4 shrink-0"></div>
         </div>
 
-        <!-- End Screen Modal -->
-        <div id="end-screen" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div id="end-card" class="glass-panel border-t border-white/20 text-white rounded-[2rem] shadow-2xl max-w-sm w-full p-8 text-center relative overflow-hidden transition-all duration-500">
-                <!-- Glow Effect (Dynamic) -->
-                <div id="end-glow" class="absolute -top-20 -left-20 w-40 h-40 bg-teal-500 rounded-full blur-[80px] opacity-20 transition-colors duration-500"></div>
+        <!-- End Screen -->
+        <div id="end-screen" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl transition-opacity duration-500">
+            <div id="end-card" class="glass-panel border-t border-white/20 text-white rounded-[2rem] shadow-2xl max-w-sm w-full p-6 text-center relative overflow-hidden transform scale-95 opacity-0 transition-all duration-500">
+                <div id="end-glow" class="absolute -top-[100px] -left-[100px] w-[300px] h-[300px] bg-teal-500 rounded-full blur-[120px] opacity-20"></div>
                 
-                <div id="end-icon" class="mb-6 relative z-10 transition-transform duration-500 transform hover:scale-110">
-                    <!-- Icon Injected JS -->
-                </div>
+                <div id="end-icon" class="mb-3 relative z-10 text-5xl drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]"></div>
+                <h2 id="end-title" class="text-2xl font-black mb-1 relative z-10 tracking-wider">VICTORY</h2>
+                <p id="end-message" class="text-gray-400 mb-4 text-[10px] uppercase tracking-widest relative z-10">Mission Complete</p>
                 
-                <h2 id="end-title" class="text-3xl font-black mb-2 relative z-10">VICTORY</h2>
-                <p id="end-message" class="text-gray-200 mb-8 text-sm relative z-10 font-medium">You have reached the top!</p>
-                
-                <div class="grid grid-cols-2 gap-4 mb-8 relative z-10">
-                    <div class="bg-black/30 rounded-2xl p-4 border border-white/10">
-                        <p class="text-[10px] text-gray-400 uppercase">Height</p>
-                        <p class="text-2xl font-bold text-white" id="final-floor">101F</p>
+                <div class="flex justify-between gap-2 mb-4 relative z-10">
+                    <div class="bg-white/5 rounded-xl p-2 flex-1 border border-white/10">
+                        <p class="text-[8px] text-gray-500 uppercase font-bold">Height</p>
+                        <p class="text-xl font-black text-white" id="final-floor">101F</p>
                     </div>
-                    <div class="bg-black/30 rounded-2xl p-4 border border-white/10">
-                        <p class="text-[10px] text-gray-400 uppercase">Time</p>
-                        <p class="text-2xl font-bold text-white" id="final-time">05:30</p>
+                    <div class="bg-white/5 rounded-xl p-2 flex-1 border border-white/10">
+                        <p class="text-[8px] text-gray-500 uppercase font-bold">Time</p>
+                        <p class="text-xl font-black text-white" id="final-time">05:30</p>
                     </div>
                 </div>
 
-                <button onclick="resetGame()" class="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-gray-200 transition transform hover:scale-[1.02] relative z-10 shadow-lg">
-                    Play Again
+                <div class="mb-4 relative z-10">
+                    <input type="text" id="player-name" maxlength="10" placeholder="Enter Name" class="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3 text-white text-center font-bold text-lg focus:border-teal-400 outline-none transition placeholder-gray-600">
+                </div>
+
+                <button onclick="submitScoreAndReset()" class="w-full bg-white text-black font-black py-3 rounded-xl hover:bg-gray-200 transition relative z-10 shadow-[0_0_20px_rgba(255,255,255,0.3)] transform active:scale-95 text-xs uppercase tracking-wider">
+                    Save & Replay
                 </button>
             </div>
         </div>
 
     </div>
 
-    <!-- Right Panel: Taipei 101 Visual -->
-    <div class="w-full md:w-1/3 h-1/3 md:h-full relative overflow-hidden z-10">
-        <!-- Tower Container -->
-        <div id="tower-scroll-container" class="w-full h-full overflow-hidden relative">
-            <div id="tower" class="tower-container pb-32 pt-[60vh]">
-                <!-- Floors generated by JS -->
+    <!-- Right Panel: Taipei 101 Visual (Right side, narrow) -->
+    <!-- 設定右側寬度為 5/12 (約 41%) -->
+    <div id="tower-panel" class="w-5/12 h-full relative overflow-hidden z-10 bg-gradient-to-b from-transparent to-black/80 border-l border-white/5">
+        <div id="tower-scroll-container" class="w-full h-full overflow-y-auto overflow-x-hidden relative custom-scroll scroll-smooth">
+            <div id="tower" class="tower-container pt-[50vh]">
+                <!-- Generated by JS -->
             </div>
         </div>
-        
-        <!-- Gradient Overlay for Bottom fade -->
-        <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black to-transparent pointer-events-none z-20"></div>
+        <!-- Vingette Overlay -->
+        <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)] z-20"></div>
+        <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none z-20"></div>
     </div>
 
     <script>
-        // --- 1. Database (Compressed) ---
+        // --- 1. Database (UNCHANGED) ---
         const rawVocab = [
-            [1,"a few","一些(用於可數)","限定詞"], [2,"a little","一點(用於不可數)","限定詞"], [3,"a lot","很多","副詞"], [4,"able","能夠的","形容詞"], [5,"about","關於;大約","介系詞"], [6,"above","在…上面","介系詞"], [7,"abroad","在國外","副詞"], [8,"absent","缺席的","形容詞"], [9,"accept","接受","動詞"], [10,"accident","事故","名詞"], [11,"across","橫越","介系詞"], [12,"act","表演;行動","動詞"], [13,"action","行動","名詞"], [14,"active","活躍的","形容詞"], [15,"activity","活動","名詞"], [16,"actor","男演員","名詞"], [17,"actress","女演員","名詞"], [18,"actually","實際上","副詞"], [19,"add","增加","動詞"], [20,"admire","欽佩","動詞"], [21,"adult","成年人","名詞"], [22,"advertisement","廣告","名詞"], [23,"advice","建議","名詞"], [24,"advise","建議","動詞"], [25,"affect","影響","動詞"], [26,"afraid","害怕的","形容詞"], [27,"after","在…之後","介系詞"], [28,"afternoon","下午","名詞"], [29,"again","再次","副詞"], [30,"against","反對;靠著","介系詞"], [31,"age","年齡;時代","名詞"], [32,"ago","以前","副詞"], [33,"agree","同意","動詞"], [34,"ahead","在前面","副詞"], [35,"aim","目標","名詞"], [36,"air","空氣","名詞"], [37,"air conditioner","空調","名詞"], [38,"airlines","航空公司","名詞"], [39,"airplane","飛機","名詞"], [40,"airport","機場","名詞"], [41,"alarm","鬧鐘:警報","名詞"], [42,"alarm clock","鬧鐘","名詞"], [43,"album","相冊:專輯","名詞"], [44,"alike","相似的","形容詞"], [45,"alive","活著的","形容詞"], [46,"all","全部;所有","代名詞"], [47,"allow","允許","動詞"], [48,"almost","幾乎","副詞"], [49,"along","沿著","介系詞"], [50,"aloud","大聲地","副詞"], [51,"already","已經","副詞"], [52,"always","總是","副詞"], [53,"ambulance","救護車","名詞"], [54,"American","美國人","名詞"], [55,"among","在…之中(三者以上)","介系詞"], [56,"amount","數量","名詞"], [57,"ancient","古代的","形容詞"], [58,"and","和;並且","連接詞"], [59,"angel","天使","名詞"], [60,"anger","憤怒","名詞"], [61,"angle","角度","名詞"], [62,"angry","生氣的","形容詞"], [63,"animal","動物","名詞"], [64,"ankle","腳踝","名詞"], [65,"another","另一個","代名詞"], [66,"answer","回答","動詞"], [67,"ant","螞蟻","名詞"], [68,"any","任何","限定詞"], [69,"any","任何","代名詞"], [70,"anyone","任何人","代名詞"], [71,"anything","任何事","代名詞"], [72,"anywhere","任何地方","副詞"], [73,"apartment","公頃","名詞"], [74,"apologize","道歉","動詞"], [75,"appear","出現","動詞"], [76,"apple","蘋果","名詞"], [77,"appreciate","欣賞;感謝","動詞"], [78,"April","四月","名詞"], [79,"area","區域","名詞"], [80,"argue","爭論","動詞"], [81,"arm","手臂","名詞"], [82,"armchair","扶手椅","名詞"], [83,"army","軍隊","名詞"], [84,"arrange","安排","動詞"], [85,"arrive","到達","動詞"], [86,"art","藝術","名詞"], [87,"artist","藝術家","名詞"], [88,"Asian","亞洲人","名詞"], [89,"ask","詢問","動詞"], [90,"asleep","睡著的","形容詞"], [91,"assistant","助理","名詞"], [92,"assume","假設","動詞"], [93,"at","在(地點、時間點)","介系詞"], [94,"attack","攻擊","動詞"], [95,"attention","注意力","名詞"], [96,"August","八月","名詞"], [97,"aunt","阿姨","名詞"], [98,"autumn","秋天","名詞"], [99,"available","可用的;有空的","形容詞"], [100,"avoid","避免","動詞"],[101,"away","離開","副詞"] , [102,"baby","嬰兒","名詞"] , [103,"baby sitter","保母","名詞"] , [104,"back","背部","名詞"] , [105,"back","後面的","形容詞"] , [106,"backpack","背包","名詞"] , [107,"backward","向後","副詞"] , [108,"bad","壞的","形容詞"] , [109,"badminton","羽毛球","名詞"] , [110,"bake","烘烤","動詞"] , [111,"bakery","麵包店","名詞"] , [112,"balcony","陽台","名詞"] , [113,"ball","球","名詞"] , [114,"balloon","氣球","名詞"] , [115,"banana","香蕉","名詞"] , [116,"band","樂團","名詞"] , [117,"band","樂隊;帶子","名詞"] , [118,"bank","銀行","名詞"] , [119,"bank","河岸","名詞"] , [120,"barbecue","烤肉","動詞"] , [121,"barber","理髮師","名詞"] , [122,"bark","吠叫","動詞"] , [123,"base","基礎;基地","名詞"] , [124,"baseball","棒球","名詞"] , [125,"basement","地下室","名詞"] , [126,"basic","基本的","形容詞"] , [127,"basket","籃子","名詞"] , [128,"basketball","籃球","名詞"] , [129,"bat","蝙蝠","名詞"] , [130,"bath","浴缸","名詞"] , [131,"bathe","洗澡","動詞"] , [132,"bathroom","浴室","名詞"] , [133,"beach","海灘","名詞"] , [134,"beach","海灘","名詞"] , [135,"bean","豆子","名詞"] , [136,"bear","熊","名詞"] , [137,"beard","鬍鬚","名詞"] , [138,"beat","打擊","動詞"] , [139,"beautiful","美麗的","形容詞"] , [140,"beauty","美麗","名詞"] , [141,"because","因為","連接詞"] , [142,"become","變成","動詞"] , [143,"bed","床","名詞"] , [144,"bedroom","臥室","名詞"] , [145,"bee","蜜蜂","名詞"] , [146,"beef","牛肉","名詞"] , [147,"beer","啤酒","名詞"] , [148,"before","在…之前","介系詞"] , [149,"begin","開始","動詞"] , [150,"beginner","初學者","名詞"] , [151,"beginning","開始","名詞"] , [152,"behave","守規矩","動詞"] , [153,"behind","在…後面","介系詞"] , [154,"believe","相信","動詞"] , [155,"bell","鈴鐺","名詞"] , [156,"belong","屬於","動詞"] , [157,"below","在…下面","介系詞"] , [158,"belt","皮帶","名詞"] , [159,"bench","長凳","名詞"] , [160,"beside","在…旁邊","介系詞"] , [161,"besides","此外;而且","副詞"] , [162,"between","在…之間(兩者)","介系詞"] , [163,"beyond","超越;在…另一邊","介系詞"] , [164,"bicycle","腳踏車","名詞"] , [165,"big","大的","形容詞"] , [166,"bill","帳單;紙鈔","名詞"] , [167,"biology","生物","名詞"] , [168,"bird","鳥","名詞"] , [169,"birthday","生日","名詞"] , [170,"bite","咬","動詞"] , [171,"bitter","苦的","形容詞"] , [172,"black","黑色","名詞"] , [173,"blackboard","黑板","名詞"] , [174,"blame","責備","動詞"] , [175,"blank","空白","名詞"] , [176,"blanket","毯子","名詞"] , [177,"bless","祝福","動詞"] , [178,"blind","失明的","形容詞"] , [179,"block","街區","名詞"] , [180,"blood","血液","名詞"] , [181,"blouse","女裝上衣","名詞"] , [182,"blow","吹","動詞"] , [183,"blow","吹","動詞"] , [184,"blue","藍色","名詞"] , [185,"board","板子","名詞"] , [186,"boat","船","名詞"] , [187,"body","身體","名詞"] , [188,"boil","煮沸","動詞"] , [189,"bomb","炸彈","名詞"] , [190,"bone","骨頭","名詞"] , [191,"book","書本","名詞"] , [192,"bookcase","書櫃","名詞"] , [193,"bookstore","書店","名詞"] , [194,"boring","令人無聊的","形容詞"] , [195,"borrow","借入","動詞"] , [196,"boss","老闆","名詞"] , [197,"both","兩者都","限定詞"] , [198,"both","兩者","代名詞"] , [199,"bother","打擾","動詞"] , [200,"bottle","瓶","名詞"] , [201,"bottom","底部","名詞"] , [202,"bow","鞠躬","動詞"] , [203,"bowl","碗","名詞"] , [204,"bowling","保齡球","名詞"] , [205,"box","盒子","名詞"] , [206,"boy","男孩","名詞"] , [207,"branch","樹枝;分支","名詞"] , [208,"brave","勇敢的","形容詞"] , [209,"bread","麵包","名詞"] , [210,"break","打破","動詞"] , [211,"breakfast","早餐","名詞"] , [212,"brick","磚塊","名詞"] , [213,"bridge","橋樑","名詞"] , [214,"bright","明亮的;聰明的","形容詞"] , [215,"bring","帶來","動詞"] , [216,"broad","寬廣的","形容詞"] , [217,"broadcast","廣播","動詞"] , [218,"brother","兄弟","名詞"] , [219,"brown","棕色","名詞"] , [220,"brunch","早午餐","名詞"] , [221,"brush","刷","動詞"] , [222,"bucket","水桶","名詞"] , [223,"buffet","自助餐","名詞"] , [224,"bug","小蟲","名詞"] , [225,"build","建造","動詞"] , [226,"building","建築物","名詞"] , [227,"bun","小圓麵包","名詞"] , [228,"bundle","捆:束","名詞"] , [229,"burn","燒焦","動詞"] , [230,"burst","爆發","動詞"] , [231,"bus","公車","名詞"] , [232,"bus stop","公車站","名詞"] , [233,"business","商業:生意","名詞"] , [234,"businessman","商人","名詞"] , [235,"busy","忙碌的","形容詞"] , [236,"but","但是","連接詞"] , [237,"butter","奶油","名詞"] , [238,"butterfly","蝴蝶","名詞"] , [239,"button","鈕扣","名詞"] , [240,"buy","購買","動詞"] , [241,"by","藉由:在…旁邊","介系詞"] , [242,"cabbage","高麗菜","名詞"] , [243,"cable","電纜","名詞"] , [244,"cafeteria","自助餐廳","名詞"] , [245,"cage","籠子","名詞"] , [246,"cake","蛋糕","名詞"] , [247,"calendar","日曆","名詞"] , [248,"call","打電話;呼叫","動詞"] , [249,"calm","使冷靜","動詞"] , [250,"camera","相機","名詞"] , [251,"camp","露營","動詞"] , [252,"campus","校園","名詞"] , [253,"can","罐頭","名詞"] , [254,"cancel","取消","動詞"] , [255,"cancer","癌症","名詞"] , [256,"candle","蠟燭","名詞"] , [257,"candy","糖果","名詞"] , [258,"cap","棒球帽","名詞"] , [259,"captain","隊長:船長","名詞"] , [260,"car","汽車","名詞"] , [261,"card","卡片","名詞"] , [262,"care","關心","動詞"] , [263,"careful","小心的","形容詞"] , [264,"careless","粗心的","形容詞"] , [265,"carpet","地毯","名詞"] , [266,"carrot","胡蘿蔔","名詞"] , [267,"carry","攜帶","動詞"] , [268,"cartoon","卡通","名詞"] , [269,"case","案例;箱子","名詞"] , [270,"cash","現金","名詞"] , [271,"castle","城堡","名詞"] , [272,"cat","貓","名詞"] , [273,"catch","抓住","動詞"] , [274,"cause","原因","名詞"] , [275,"ceiling","天花板","名詞"] , [276,"celebrate","慶祝","動詞"] , [277,"cellphone","手機","名詞"] , [278,"cent","分(貨幣單位)","名詞"] , [279,"center","中心","名詞"] , [280,"centimeter","公分","名詞"] , [281,"century","世紀","名詞"] , [282,"cereal","穀物麥片","名詞"] , [283,"certain","確定的","形容詞"] , [284,"chair","椅子","名詞"] , [285,"chalk","粉筆","名詞"] , [286,"chance","機會","名詞"] , [287,"change","零錢","名詞"] , [288,"channel","頻道;海峽","名詞"] , [289,"character","角色:性格","名詞"] , [290,"charge","收費","動詞"] , [291,"chart","圖表","名詞"] , [292,"chase","追逐","動詞"] , [293,"cheap","便宜的","形容詞"] , [294,"cheat","欺騙","動詞"] , [295,"check","檢查","動詞"] , [296,"check","檢查","動詞"] , [297,"cheer","歡呼","名詞"] , [298,"cheerleader","啦啦隊","名詞"] , [299,"cheese","起司","名詞"] , [300,"chemistry","化學","名詞"] , [301,"chess","西洋棋","名詞"] , [302,"chicken","雞肉","名詞"] , [303,"chicken","雞","名詞"] , [304,"child","小孩","名詞"] , [305,"childhood","童年","名詞"] , [306,"childish","幼稚的","形容詞"] , [307,"childlike","孩子般的","形容詞"] , [308,"chin","下巴","名詞"] , [309,"Chinese","中文","名詞"] , [310,"Chinese New Year","春節","名詞"] , [311,"chocolate","巧克力","名詞"] , [312,"choice","選擇","名詞"] , [313,"choose","選擇","動詞"] , [314,"chopsticks","筷子","名詞"] , [315,"Christmas","聖誕節","名詞"] , [316,"chubby","圓胖的","形容詞"] , [317,"church","教堂","名詞"] , [318,"circle","圓形","名詞"] , [319,"city","城市","名詞"] , [320,"clap","拍手","動詞"] , [321,"class leader","班長","名詞"] , [322,"classical","古典的","形容詞"] , [323,"classmate","同學","名詞"] , [324,"classroom","教室","名詞"] , [325,"clean","清潔","動詞"] , [326,"clear","晴朗的","形容詞"] , [327,"clerk","店員;職員","名詞"] , [328,"climate","氣候","名詞"] , [329,"climb","攀爬","動詞"] , [330,"clock","時鐘","名詞"] , [331,"close","關閉","動詞"] , [332,"closet","衣櫥","名詞"] , [333,"clothes","衣服(總稱)","名詞"] , [334,"cloud","雲","名詞"] , [335,"cloudy","多雲的","形容詞"] , [336,"club","俱樂部","名詞"] , [337,"coach","教練","名詞"] , [338,"coast","海岸","名詞"] , [339,"coat","外套","名詞"] , [340,"cockroach","蟑螂","名詞"] , [341,"coffee","咖啡","名詞"] , [342,"coin","硬幣","名詞"] , [343,"cola","可樂","名詞"] , [344,"cold","感冒","名詞"] , [345,"cold","寒冷的","形容詞"] , [346,"collect","收集","動詞"] , [347,"color","顏色","名詞"] , [348,"colorful","多彩的","形容詞"] , [349,"comb","梳子","名詞"] , [350,"come","來","動詞"] , [351,"comfortable","舒服的","形容詞"] , [352,"comic","漫畫","名詞"] , [353,"command","命令","名詞"] , [354,"comment","評論","動詞"] , [355,"common","普通的;常見的","形容詞"] , [356,"company","公司","名詞"] , [357,"compare","比較","動詞"] , [358,"complain","抱怨","動詞"] , [359,"complete","完成","動詞"] , [360,"complete","完整的","形容詞"] , [361,"computer","電腦","名詞"] , [362,"computer game","電腦遊戲","名詞"] , [363,"concern","關心:涉及","動詞"] , [364,"confident","有自信的","形容詞"] , [365,"confuse","混淆","動詞"] , [366,"congratulation","祝賀","名詞"] , [367,"consider","考慮","動詞"] , [368,"considerate","體貼的","形容詞"] , [369,"contact lens","隱形眼鏡","名詞"] , [370,"continue","繼續","動詞"] , [371,"contract","合約","名詞"] , [372,"control","控制","動詞"] , [373,"convenience store","便利商店","名詞"] , [374,"convenient","方便的","形容詞"] , [375,"conversation","對話","名詞"] , [376,"cook","烹調","動詞"] , [377,"cook","廚師","名詞"] , [378,"cookie","餅乾","名詞"] , [379,"cool","酷的","形容詞"] , [380,"cool","涼爽的","形容詞"] , [381,"copy","複製","動詞"] , [382,"corn","玉米","名詞"] , [383,"corner","角落","名詞"] , [384,"correct","改正","動詞"] , [385,"correct","正確的","形容詞"] , [386,"cost","花費","動詞"] , [387,"cotton","棉","名詞"] , [388,"couch","長沙發","名詞"] , [389,"cough","咳嗽","名詞"] , [390,"count","數數","動詞"] , [391,"country","國家:鄉下","名詞"] , [392,"couple","情侶;夫妻","名詞"] , [393,"courage","勇氣","名詞"] , [394,"course","課程","名詞"] , [395,"court","法庭:球場","名詞"] , [396,"cousin","堂(表)兄弟姊妹","名詞"] , [397,"cover","覆蓋","動詞"] , [398,"cow","牛","名詞"] , [399,"crab","螃蟹","名詞"] , [400,"crayon","蠟筆","名詞"],[401,"crazy","瘋狂的","形容詞"],[402,"cream","鮮奶油","名詞"],[403,"create","創造","動詞"],[404,"credit card","信用卡","名詞"],[405,"crime","犯罪","名詞"],[406,"cross","穿越","動詞"],[407,"crowd","人群","名詞"],[408,"crowded","擁擁擠的","形容詞"],[409,"cruel","殘忍的","形容詞"],[410,"cry","哭","動詞"],[411,"culture","文化","名詞"],[412,"culture center","文化中心","名詞"],[413,"cup","杯子","名詞"],[414,"cup","杯","名詞"],[415,"cure","治癒","動詞"],[416,"curious","好奇的","形容詞"],[417,"current","當前的","形容詞"],[418,"curtain","窗簾","名詞"],[419,"curve","曲線","名詞"],[420,"custom","習俗","名詞"],[421,"customer","顧客","名詞"],[422,"cut","切割","動詞"],[423,"cute","可愛的","形容詞"],[424,"daily","每日的","形容詞"],[425,"damage","損害","名詞"],[426,"dance","跳舞","動詞"],[427,"danger","危險","名詞"],[428,"dangerous","危險的","形容詞"],[429,"dark","黑暗的","形容詞"],[430,"date","約會","動詞"],[431,"daughter","女兒","名詞"],[432,"dawn","黎明","名詞"],[433,"dead","死的","形容詞"],[434,"deaf","失聰的","形容詞"],[435,"deal","處理","動詞"],[436,"dear","親愛的;昂貴的","形容詞"],[437,"death","死亡","名詞"],[438,"debate","辯論","名詞"],[439,"December","十二月","名詞"],[440,"decide","決定","動詞"],[441,"decision","決定","名詞"],[442,"decorate","裝飾","動詞"],[443,"decrease","減少","動詞"],[444,"deep","深的","形容詞"],[445,"deer","鹿","名詞"],[446,"define","定義","動詞"],[447,"degree","度數","名詞"],[448,"delicious","美味的","形容詞"],[449,"deliver","遞送","動詞"],[450,"dentist","牙醫","名詞"],[451,"department","部門;系","名詞"],[452,"department store","百貨公司","名詞"],[453,"depend","依賴","動詞"],[454,"describe","描述","動詞"],[455,"desert","沙漠","名詞"],[456,"design","設計","動詞"],[457,"desire","慾望","名詞"],[458,"desk","書桌","名詞"],[459,"dessert","甜點","名詞"],[460,"detect","偵測","動詞"],[461,"develop","發展","動詞"],[462,"dial","撥號","動詞"],[463,"diamond","鑽石","名詞"],[464,"diary","日記","名詞"],[465,"dictionary","字典","名詞"],[466,"die","死亡","動詞"],[467,"diet","飲食;節食","名詞"],[468,"difference","差異","名詞"],[469,"different","不同的","形容詞"],[470,"difficult","困難的","形容詞"],[471,"difficulty","困難","名詞"],[472,"dig","挖掘","動詞"],[473,"diligent","勤奮的","形容詞"],[474,"dining room","餐廳","名詞"],[475,"dinner","晚餐","名詞"],[476,"dinosaur","恐龍","名詞"],[477,"diplomat","外交官","名詞"],[478,"direct","指導","動詞"],[479,"direction","方向","名詞"],[480,"dirty","骯髒的","形容詞"],[481,"disappear","消失","動詞"],[482,"discover","發現","動詞"],[483,"discuss","討論","動詞"],[484,"discussion","討論","名詞"],[485,"dish","盤子","名詞"],[486,"dishonest","不誠實的","形容詞"],[487,"distance","距離","名詞"],[488,"distant","遙遠的","形容詞"],[489,"divide","分割","動詞"],[490,"dizzy","頭暈的","形容詞"],[491,"doctor","醫生","名詞"],[492,"dodge ball","躲避球","名詞"],[493,"dog","狗","名詞"],[494,"doll","洋娃娃","名詞"],[495,"dollar","元(貨幣單位)","名詞"],[496,"dolphin","海豚","名詞"],[497,"donkey","驢","名詞"],[498,"door","門","名詞"],[499,"dot","點","名詞"],[500,"double","雙倍的","形容詞"],[501,"Double Tenth Day","雙十節","名詞"],[502,"doubt","懷疑","動詞"],[503,"doughnut","甜甜圈","名詞"],[504,"down","沿…而下","介系詞"],[505,"download","下載","動詞"],[506,"downstairs","樓下","名詞"],[507,"downtown","市中心","名詞"],[508,"dozen","一打(十二個)","名詞"],[509,"dragon","龍","名詞"],[510,"Dragon-boat Festival","端午節","名詞"],[511,"drama","戲劇","名詞"],[512,"draw","畫畫","動詞"],[513,"draw","畫畫","動詞"],[514,"drawer","抽屜","名詞"],[515,"dream","夢想","名詞"],[516,"dress","連身裙","名詞"],[517,"dresser","梳妝台","名詞"],[518,"drink","喝","動詞"],[519,"drive","開車","動詞"],[520,"driver","司機","名詞"],[521,"drop","掉落","動詞"],[522,"drugstore","藥局","名詞"],[523,"drum","鼓","名詞"],[524,"dry","乾燥的","形容詞"],[525,"dryer","烘乾機","名詞"],[526,"duck","鴨","名詞"],[527,"dumb","啞的","形容詞"],[528,"dumpling","餃子","名詞"],[529,"during","在…期間","介系詞"],[530,"duty","責任","名詞"],[531,"each","每個","代名詞"],[532,"eagle","老鷹","名詞"],[533,"ear","耳朵","名詞"],[534,"early","早的","形容詞"],[535,"earn","賺取","動詞"],[536,"earrings","耳環","名詞"],[537,"earth","地球","名詞"],[538,"earthquake","地震","名詞"],[539,"ease","緩和","動詞"],[540,"east","東方的","形容詞"],[541,"Easter","復活節","名詞"],[542,"easy","容易的","形容詞"],[543,"eat","吃","動詞"],[544,"edge","邊緣","名詞"],[545,"education","教育","名詞"],[546,"effort","努力","名詞"],[547,"egg","蛋","名詞"],[548,"eight","八","名詞"],[549,"eighteen","十八","名詞"],[550,"eighty","八十","名詞"],[551,"either","也(用於否定句)","副詞/連接詞"],[552,"elder","長輩","名詞"],[553,"elect","選舉","動詞"],[554,"electric","電的","形容詞"],[555,"elementary school","小學","名詞"],[556,"elephant","大象","名詞"],[557,"eleven","十一","名詞"],[558,"e-mail","電子郵件","名詞"],[559,"embarrass","使尷尬","動詞"],[560,"emotion","情緒","名詞"],[561,"emphasize","強調","動詞"],[562,"employ","雇用","動詞"],[563,"end","結束","動詞"],[564,"enemy","敵人","名詞"],[565,"energetic","精力充沛的","形容詞"],[566,"energy","能量","名詞"],[567,"engine","引擎","名詞"],[568,"engineer","工程師","名詞"],[569,"English","英文","名詞"],[570,"enjoy","享受","動詞"],[571,"enough","足夠的","形容詞"],[572,"enter","進入","動詞"],[573,"entrance","入口","名詞"],[574,"envelope","信封","名詞"],[575,"environment","環境","名詞"],[576,"envy","嫉妒","動詞"],[577,"equal","平等的","形容詞"],[578,"eraser","橡皮擦","名詞"],[579,"error","錯誤","名詞"],[580,"especially","尤其","副詞"],[581,"eve","前夕","名詞"],[582,"even","甚至","副詞"],[583,"evening","傍晚","名詞"],[584,"event","事件","名詞"],[585,"ever","曾經","副詞"],[586,"everyone","每個人","代名詞"],[587,"everything","每件事","代名詞"],[588,"everywhere","到處","副詞"],[589,"evil","邪惡的","形容詞"],[590,"exam","考試","名詞"],[591,"example","例子","名詞"],[592,"excellent","優秀的","形容詞"],[593,"except","除了……之外","介系詞"],[594,"excite","使興奮","動詞"],[595,"excited","感到興奮的","形容詞"],[596,"exciting","令人興奮的","形容詞"],[597,"excuse","藉口","名詞"],[598,"exercise","運動","動詞"],[599,"exercise","練習","名詞"],[600,"exist","動詞","存在"],[601,"exit","出口","名詞"],[602,"expect","預期","動詞"],[603,"expensive","昂貴的","形容詞"],[604,"experience","經驗","名詞"],[605,"explain","解釋","動詞"],[606,"explain","解釋","動詞"],[607,"express","表達","動詞"],[608,"extra","額外的","形容詞"],[609,"eye","眼睛","名詞"],[610,"face","臉","名詞"],[611,"fact","事實","名詞"],[612,"factory","工廠","名詞"],[613,"fair","公平的","形容詞"],[614,"fall","掉落","動詞"],[615,"family","家庭","名詞"],[616,"famous","著名的","形容詞"],[617,"fan","粉絲;愛好者","名詞"],[618,"fan","電風扇","名詞"],[619,"fantastic","極好的","形容詞"],[620,"far","遠的","形容詞"],[621,"farm","農場","名詞"],[622,"farmer","農夫","名詞"],[623,"fashionable","時尚的","形容詞"],[624,"fast","快的","形容詞"],[625,"fast food","速食","名詞"],[626,"fast food restaurant","速食餐廳","名詞"],[627,"fat","胖的","形容詞"],[628,"father","父親","名詞"],[629,"Father's Day","父親節","名詞"],[630,"faucet","水龍頭","名詞"],[631,"fault","過錯","名詞"],[632,"favorite","最喜愛的","形容詞"],[633,"fear","恐懼","名詞"],[634,"February","二月","名詞"],[635,"fee","費用","名詞"],[636,"feed","餵食","動詞"],[637,"feel","感覺","動詞"],[638,"feeling","感覺","名詞"],[639,"fence","柵欄","名詞"],[640,"festival","節慶","名詞"],[641,"fever","發燒","名詞"],[642,"few","很少(用於可數)","限定詞"],[643,"fifteen","十五","名詞"],[644,"fifty","五十","名詞"],[645,"fight","打架","動詞"],[646,"file","檔案","名詞"],[647,"fill","填滿","動詞"],[648,"film","電影","名詞"],[649,"final","最終的","形容詞"],[650,"finally","最後","副詞"],[651,"find","找到","動詞"],[652,"finger","手指","名詞"],[653,"finish","完成","動詞"],[654,"fire","火","名詞"],[655,"fire station","消防局","名詞"],[656,"first","第一","名詞"],[657,"fish","魚","名詞"],[658,"fish","釣魚","動詞"],[659,"fish","魚","名詞"],[660,"fisherman","漁夫","名詞"],[661,"fit","適合","動詞"],[662,"five","五","名詞"],[663,"fix","修理","動詞"],[664,"flag","旗幟","名詞"],[665,"flashlight","手電筒","名詞"],[666,"flat tire","爆胎","名詞"],[667,"flight","飛行;航班","名詞"],[668,"floor","地板;樓層","名詞"],[669,"flour","麵粉","名詞"],[670,"flower","花","名詞"],[671,"flower shop","花店","名詞"],[672,"flu","流行性感冒","名詞"],[673,"flute","長笛","名詞"],[674,"fly","飛行","動詞"],[675,"focus","聚焦","動詞"],[676,"fog","霧","名詞"],[677,"foggy","有霧的","形容詞"],[678,"follow","跟隨","動詞"],[679,"food","食物","名詞"],[680,"fool","傻瓜","名詞"],[681,"foolish","愚蠢的","形容詞"],[682,"foot","腳","名詞"],[683,"foot","英尺","名詞"],[684,"football","美式足球","名詞"],[685,"for","為了;給;因為","介系詞"],[686,"foreign","外國的","形容詞"],[687,"foreigner","外國人","名詞"],[688,"forest","森林","名詞"],[689,"forget","忘記","動詞"],[690,"forgive","原諒","動詞"],[691,"fork","叉子","名詞"],[692,"form","形成","動詞"],[693,"formal","正式的","形容詞"],[694,"former","前任的;以前的","形容詞"],[695,"forty","四十","名詞"],[696,"forward","向前","副詞"],[697,"four","四","名詞"],[698,"fourteen","十四","名詞"],[699,"fox","狐狸","名詞"],[700,"frank","坦率的","形容詞"],[701,"free","免費的;自由的","形容詞"],[702,"freedom","自由","名詞"],[703,"freezer","冷凍庫","名詞"],[704,"freezing","極冷的","形容詞"],[705,"fresh","新鮮的","形容詞"],[706,"Friday","星期五","名詞"],[707,"friend","朋友","名詞"],[708,"friendly","友善的","形容詞"],[709,"friendship","友誼","名詞"],[710,"fries","薯條","名詞"],[711,"frighten","使害怕","動詞"],[712,"frisbee","飛盤","名詞"],[713,"frog","青蛙","名詞"],[714,"from","從……來自………","介系詞"],[715,"front","前面的","形容詞"],[716,"fruit","水果","名詞"],[717,"fry","油炸","動詞"],[718,"full","飽的","形容詞"],[719,"fun","樂趣","名詞"],[720,"funny","有趣的","形容詞"],[721,"furniture","家具","名詞"],[722,"future","未來","名詞"],[723,"game","遊戲","名詞"],[724,"garage","車庫","名詞"],[725,"garbage","垃圾","名詞"],[726,"garden","花園","名詞"],[727,"gas","瓦斯;汽油","名詞"],[728,"gate","大門","名詞"],[729,"gather","聚集","動詞"],[730,"generous","慷慨的","形容詞"],[731,"genius","天才","名詞"],[732,"gentle","溫和的","形容詞"],[733,"gentleman","紳士","名詞"],[734,"geography","地理","名詞"],[735,"gesture","手勢","名詞"],[736,"get","得到","動詞"],[737,"ghost","鬼魂","名詞"],[738,"giant","巨人","名詞"],[739,"gift","禮物","名詞"],[740,"girl","女孩","名詞"],[741,"give","給予","動詞"],[742,"glad","高興的","形容詞"],[743,"glass","玻璃杯","名詞"],[744,"glass","玻璃杯","名詞"],[745,"glasses","眼鏡","名詞"],[746,"glove","手套","名詞"],[747,"glue","膠水","名詞"],[748,"go","去","動詞"],[749,"goal","目標","名詞"],[750,"goat","山羊","名詞"],[751,"gold","黃金","名詞"],[752,"golf","高爾夫球","名詞"],[753,"goose","鵝","名詞"],[754,"government","政府","名詞"],[755,"grade","年級;成績","名詞"],[756,"gram","公克","名詞"],[757,"granddaughter","孫女","名詞"],[758,"grandfather","祖父","名詞"],[759,"grandmother","祖母","名詞"],[760,"grandson","孫子","名詞"],[761,"grape","葡萄","名詞"],[762,"grass","草","名詞"],[763,"gray","灰色","名詞"],[764,"greedy","貪心的","形容詞"],[765,"green","綠色","名詞"],[766,"greet","問候","動詞"],[767,"ground","地面","名詞"],[768,"group","群組","名詞"],[769,"grow","成長;生長","動詞"],[770,"grow","成長","動詞"],[771,"guard","警衛","名詞"],[772,"guava","番石榴","名詞"],[773,"guess","猜測","動詞"],[774,"guest","客人","名詞"],[775,"guide","導遊","名詞"],[776,"guide","引導","動詞"],[777,"guitar","吉他","名詞"],[778,"gun","槍","名詞"],[779,"gym","體育館","名詞"],[780,"habit","習慣","名詞"],[781,"hair","頭髮","名詞"],[782,"hair dresser","髮型師","名詞"],[783,"haircut","理髮","名詞"],[784,"half","一半","名詞"],[785,"hall","走廊;大廳","名詞"],[786,"Halloween","萬聖節","名詞"],[787,"ham","火腿","名詞"],[788,"hamburger","漢堡","名詞"],[789,"hammer","鐵鎚","名詞"],[790,"hand","手","名詞"],[791,"handkerchief","手帕","名詞"],[792,"handle","處理","動詞"],[793,"handsome","英俊的","形容詞"],[794,"hang","懸掛","動詞"],[795,"hanger","衣架","名詞"],[796,"happen","發生","動詞"],[797,"happy","快樂的","形容詞"],[798,"hard","硬的;困難的","形容詞"],[799,"hardly","幾乎不","副詞"],[800,"hard-working","努力工作的","形容詞"],[801,"hate","討厭","動詞"],[802,"he","他","代名詞 (主格)"],[803,"head","頭","名詞"],[804,"headache","頭痛","名詞"],[805,"health","健康","名詞"],[806,"healthy","健康的","形容詞"],[807,"hear","聽見","動詞"],[808,"heart","心臟","名詞"],[809,"heat","熱","名詞"],[810,"heater","暖氣","名詞"],[811,"heavy","重的","形容詞"],[812,"height","高度","名詞"],[813,"helicopter","直升機","名詞"],[814,"help","幫助","動詞"],[815,"helpful","有幫助的","形容詞"],[816,"hen","母雞","名詞"],[817,"her","她的","所有格"],[818,"her","她的","代名詞 (受格)"],[819,"hero","英雄","名詞"],[820,"hers","她的","代名詞"],[821,"herself","她自己","代名詞"],[822,"hide","隱藏","動詞"],[823,"high","高的","形容詞"],[824,"highway","高速公路","名詞"],[825,"hike","健行/遠足","動詞"],[826,"hill","山丘","名詞"],[827,"him","他","代名詞 (受格)"],[828,"himself","他自己","代名詞"],[829,"hip","臀部","名詞"],[830,"hippo","河馬","名詞"],[831,"hire","雇用","動詞"],[832,"his","他的","所有格"],[833,"his","他的","代名詞"],[834,"history","歷史","名詞"],[835,"hit","擊打","動詞"],[836,"hobby","嗜好","名詞"],[837,"hold","握住","動詞"],[838,"hole","破洞","名詞"],[839,"holiday","假日","名詞"],[840,"home","家","名詞"],[841,"homesick","想家的","形容詞"],[842,"homework","家庭作業","名詞"],[843,"honest","誠實的","形容詞"],[844,"honesty","誠實","名詞"],[845,"honey","蜂蜜;親愛的","名詞"],[846,"hop","單腳跳","動詞"],[847,"hope","希望","動詞"],[848,"horrible","可怕的","形容詞"],[849,"horse","馬","名詞"],[850,"hospital","醫院","名詞"],[851,"host","主人","名詞"],[852,"hot","辣的;熱的","形容詞"],[853,"hot","炎熱的","形容詞"],[854,"hot dog","熱狗","名詞"],[855,"hotel","飯店","名詞"],[856,"hour","小時","名詞"],[857,"house","房子","名詞"],[858,"housewife","家庭主婦","名詞"],[859,"housework","家事","名詞"],[860,"how","如何","疑問詞"],[861,"however","然而","副詞"],[862,"hug","擁抱","動詞"],[863,"human","人類","名詞"],[864,"humble","謙虛的","形容詞"],[865,"humid","潮濕的","形容詞"],[866,"humor","幽默","名詞"],[867,"humorous","幽默的","形容詞"],[868,"hundred","百","名詞"],[869,"hunger","飢餓","名詞"],[870,"hungry","餓的","形容詞"],[871,"hunt","狩獵","動詞"],[872,"hunter","獵人","名詞"],[873,"hurry","匆忙","動詞"],[874,"hurt","傷害","動詞"],[875,"husband","丈夫","名詞"],[876,"I","我","代名詞 (主格)"],[877,"ice","冰","名詞"],[878,"ice cream","冰淇淋","名詞"],[879,"idea","主意","名詞"],[880,"if","如果","連接詞"],[881,"ignore","忽略","動詞"],[882,"imagine","想像","動詞"],[883,"impolite","不禮貌的","形容詞"],[884,"importance","重要性","名詞"],[885,"important","重要的","形容詞"],[886,"impossible","不可能的","形容詞"],[887,"improve","改善","動詞"],[888,"in","在…裡面(較大範圍)","介系詞"],[889,"in back of","在…後面","介系詞"],[890,"in front of","在…前面","介系詞"],[891,"inch","英吋","名詞"],[892,"include","包含","動詞"],[893,"income","收入","名詞"],[894,"increase","增加","動詞"],[895,"independent","獨立的","形容詞"],[896,"influence","影響","名詞"],[897,"information","資訊","名詞"],[898,"ink","墨水","名詞"],[899,"insect","昆蟲","名詞"],[900,"inside","在…裡面","介系詞"],[901,"insist","堅持","動詞"],[902,"inspire","激勵","動詞"],[903,"instant","立即的","形容詞"],[904,"instant noodle","泡麵","名詞"],[905,"instrument","樂器","名詞"],[906,"intelligent","有智慧的","形容詞"],[907,"interest","興趣","名詞"],[908,"interested","感興趣的","形容詞"],[909,"interesting","有趣的","形容詞"],[910,"international","國際的","形容詞"],[911,"Internet","網際網路","名詞"],[912,"interrupt","打斷","動詞"],[913,"interview","面試;訪談","名詞"],[914,"into","進入","介系詞"],[915,"introduce","介紹","動詞"],[916,"invent","發明","動詞"],[917,"invitation","邀請","名詞"],[918,"invite","邀請","動詞"],[919,"iron","熨燙","動詞"],[920,"island","島嶼","名詞"],[921,"it","它","代名詞 (主/受格)"],[922,"item","項目","名詞"],[923,"its","它的","所有格"],[924,"its","它的","所有格"],[925,"itself","它自己","代名詞"],[926,"jacket","夾克","名詞"],[927,"jam","果醬","名詞"],[928,"January","一月","名詞"],[929,"Japanese","日本人","名詞"],[930,"jealous","嫉妒的","形容詞"],[931,"jeans","牛仔褲","名詞"],[932,"jeep","吉普車","名詞"],[933,"jog","慢跑","動詞"],[934,"join","加入","動詞"],[935,"joke","笑話","名詞"],[936,"journalist","記者","名詞"],[937,"joy","歡樂","名詞"],[938,"judge","法官","名詞"],[939,"judge","判斷","動詞"],[940,"juice","果汁","名詞"],[941,"July","七月","名詞"],[942,"jump","跳躍","動詞"],[943,"June","六月","名詞"],[944,"junior high school","初中","名詞"],[945,"kangaroo","袋鼠","名詞"],[946,"keep","保持","動詞"],[947,"ketchup","番茄醬","名詞"],[948,"key","鑰匙","名詞"],[949,"kick","踢","動詞"],[950,"kid","小孩","名詞"],[951,"kill","殺死","動詞"],[952,"kilogram","公斤","名詞"],[953,"kilometer","公里","名詞"],[954,"kind","仁慈的;親切的","形容詞"],[955,"kind","種類","名詞"],[956,"kindergarten","幼兒園","名詞"],[957,"king","國王","名詞"],[958,"kingdom","王國","名詞"],[959,"kiss","親吻","動詞"],[960,"kitchen","廚房","名詞"],[961,"kitten","小貓","名詞"],[962,"knee","膝蓋","名詞"],[963,"knife","刀子","名詞"],[964,"knock","敲","動詞"],[965,"know","知道","動詞"],[966,"knowledge","知識","名詞"],[967,"koala","無尾熊","名詞"],[968,"Korean","韓國人","名詞"],[969,"lack","缺乏","名詞"],[970,"lady","女士","名詞"],[971,"lake","湖泊","名詞"],[972,"lamb","小羊","名詞"],[973,"lamp","燈","名詞"],[974,"land","降落","動詞"],[975,"language","語言","名詞"],[976,"lantern","燈籠","名詞"],[977,"Lantern Festival","元宵節","名詞"],[978,"large","大的","形容詞"],[979,"last","最後的","形容詞"],[980,"last","上一個的;最後的","形容詞"],[981,"late","晚的","形容詞"],[982,"later","稍後","副詞"],[983,"latest","最新的","形容詞"],[984,"laugh","大笑","動詞"],[985,"law","法律","名詞"],[986,"lawyer","律師","名詞"],[987,"lay","放置(產卵)","動詞"],[988,"lazy","懶惰的","形容詞"],[989,"lead","領導","動詞"],[990,"leader","領袖","名詞"],[991,"leaf","葉子","名詞"],[992,"learn","學習","動詞"],[993,"least","最少","副詞"],[994,"leave","離開","動詞"],[995,"left","左邊的","形容詞"],[996,"leg","腿","名詞"],[997,"lemon","檸檬","名詞"],[998,"lend","借出","動詞"],[999,"less","更少(用於不可數)","限定詞"],[1000,"lesson","課","名詞"],[1001,"let","讓","動詞"],[1002,"letter","信件;字母","名詞"],[1003,"lettuce","生菜","名詞"],[1004,"level","水平","名詞"],[1005,"library","圖書館","名詞"],[1006,"lick","舔","動詞"],[1007,"lid","蓋子","名詞"],[1008,"lie","說謊;躺","動詞"],[1009,"life","生命","名詞"],[1010,"lift","舉起","動詞"],[1011,"light","燈;光","名詞"],[1012,"light","輕的","形容詞"],[1013,"lightning","閃電","名詞"],[1014,"like","像…","介系詞"],[1015,"like","喜歡","動詞"],[1016,"limit","限制","動詞"],[1017,"line","線","名詞"],[1018,"link","連結","名詞"],[1019,"lion","獅子","名詞"],[1020,"lip","嘴唇","名詞"],[1021,"liquid","液體","名詞"],[1022,"list","列出","動詞"],[1023,"list","列出","動詞"],[1024,"listen","聆聽","動詞"],[1025,"listen","聆聽","動詞"],[1026,"liter","公升","名詞"],[1027,"little","很少(用於不可數)","限定詞"],[1028,"little","小的","形容詞"],[1029,"live","居住;生活","動詞"],[1030,"living room","客廳","名詞"],[1031,"loaf","條(麵包)","名詞"],[1032,"local","當地的","形容詞"],[1033,"lock","鎖上","動詞"],[1034,"locker","鎖櫃","名詞"],[1035,"lonely","孤獨的","形容詞"],[1036,"long","長的","形容詞"],[1037,"look","看","動詞"],[1038,"lose","輸掉;失去","動詞"],[1039,"loser","輸家","名詞"],[1040,"loud","大聲的","形容詞"],[1041,"love","愛","動詞"],[1042,"lovely","可愛的","形容詞"],[1043,"low","低的","形容詞"],[1044,"lucky","幸運的","形容詞"],[1045,"lunch","午餐","名詞"],[1046,"machine","機器","名詞"],[1047,"mad","瘋狂的","形容詞"],[1048,"magazine","雜誌","名詞"],[1049,"magic","魔法的","形容詞"],[1050,"magician","魔術師","名詞"],[1051,"mail","郵件","名詞"],[1052,"mailman","郵差","名詞"],[1053,"major","主要的","形容詞"],[1054,"make","製作","動詞"],[1055,"mall","購物中心","名詞"],[1056,"man","男人","名詞"],[1057,"manager","經理","名詞"],[1058,"mango","芒果","名詞"],[1059,"manner","禮貌;方式","名詞"],[1060,"many","許多(可數)","代名詞"],[1061,"map","地圖","名詞"],[1062,"March","三月","名詞"],[1063,"mark","批改","動詞"],[1064,"marker","麥克筆","名詞"],[1065,"market","市場","名詞"],[1066,"married","已婚的","形容詞"],[1067,"marry","結婚","動詞"],[1068,"marvelous","不可思議的;極好的","形容詞"],[1069,"mask","口罩:面具","名詞"],[1070,"mass","團:大量","名詞"],[1071,"master","主人;大師","名詞"],[1072,"mat","地墊","名詞"],[1073,"match","匹配","動詞"],[1074,"math","數學","名詞"],[1075,"matter","事情","名詞"],[1076,"maximum","最大的","形容詞"],[1077,"May","五月","名詞"],[1078,"me","我","代名詞 (受格)"],[1079,"meal","一餐","名詞"],[1080,"mean","意思是","動詞"],[1081,"measure","測量","動詞"],[1082,"meat","肉","名詞"],[1083,"mechanic","技工","名詞"],[1084,"medicine","藥物;醫學","名詞"],[1085,"medium","中等的","形容詞"],[1086,"meet","遇見","動詞"],[1087,"meeting","會議","名詞"],[1088,"member","成員","名詞"],[1089,"memory","記憶:回憶","名詞"],[1090,"memory","記憶","名詞"],[1091,"men's room","男廁","名詞"],[1092,"menu","菜單","名詞"],[1093,"message","訊息","名詞"],[1094,"metal","金屬","名詞"],[1095,"meter","公尺","名詞"],[1096,"method","方法","名詞"],[1097,"metro","地鐵","名詞"],[1098,"middle","中間的","形容詞"],[1099,"midnight","午夜","名詞"],[1100,"mile","英里","名詞"],[1101,"milk","牛奶","名詞"],[1102,"milk shake","奶昔","名詞"],[1103,"million","百萬","名詞"],[1104,"mind","心智","名詞"],[1105,"mind","介意","動詞"],[1106,"mine","我的","代名詞"],[1107,"minor","次要的;較小的","形容詞"],[1108,"minus","負號","名詞"],[1109,"minute","分鐘","名詞"],[1110,"mirror","鏡子","名詞"],[1111,"miss","想念;未擊中","動詞"],[1112,"mistake","錯誤","名詞"],[1113,"mix","混合","動詞"],[1114,"model","模特兒","名詞"],[1115,"modern","現代的","形容詞"],[1116,"moment","片刻","名詞"],[1117,"Monday","星期一","名詞"],[1118,"money","錢","名詞"],[1119,"monkey","猴子","名詞"],[1120,"monster","怪物","名詞"],[1121,"month","月","名詞"],[1122,"moon","月亮","名詞"],[1123,"moon cake","月餅","名詞"],[1124,"Moon Festival","中秋節","名詞"],[1125,"mop","用拖把拖地","動詞"],[1126,"morning","早晨","名詞"],[1127,"mosquito","蚊子","名詞"],[1128,"mother","母親","名詞"],[1129,"Mother's Day","母親節","名詞"],[1130,"motion","動作","名詞"],[1131,"motorcycle","摩托車","名詞"],[1132,"mountain","山","名詞"],[1133,"mouse","老鼠","名詞"],[1134,"mouth","嘴巴","名詞"],[1135,"move","移動","動詞"],[1136,"movement","運動","名詞"],[1137,"movie","電影","名詞"],[1138,"movie theater","電影院","名詞"],[1139,"mud","泥巴","名詞"],[1140,"museum","博物館","名詞"],[1141,"MRT","捷運","名詞"],[1142,"music","音樂","名詞"],[1143,"musician","音樂家","名詞"],[1144,"most","大部分","代名詞"],[1145,"my","我的","所有格"],[1146,"myself","我自己","代名詞"],[1147,"nail","指甲","名詞"],[1148,"napkin","餐巾","名詞"],[1149,"narrow","窄的","形容詞"],[1150,"national","國家的","形容詞"],[1151,"natural","自然的","形容詞"],[1152,"nature","大自然","名詞"],[1153,"naughty","頑皮的","形容詞"],[1154,"near","靠近","介系詞"],[1155,"necessary","必要的","形容詞"],[1156,"neck","脖子","名詞"],[1157,"necklace","項鍊","名詞"],[1158,"need","需要","動詞"],[1159,"needle","針","名詞"],[1160,"negative","負面的","形容詞"],[1161,"neighbor","鄰居","名詞"],[1162,"nephew","侄子;外甥","名詞"],[1163,"nervous","緊張的","形容詞"],[1164,"nest","鳥巢","名詞"],[1165,"net","網","名詞"],[1166,"never","從不","副詞"],[1167,"New Year's Day","元旦","名詞"],[1168,"New Year's Eve","除夕","名詞"],[1169,"news","新聞","名詞"],[1170,"newspaper","報紙","名詞"],[1171,"next","下一個的","形容詞"],[1172,"next to","緊鄰;在…旁邊","介系詞"],[1173,"nice-looking","好看的","形容詞"],[1174,"niece","姪女;外甥女","名詞"],[1175,"night","夜晚","名詞"],[1176,"nine","九","名詞"],[1177,"nineteen","十九","名詞"],[1178,"ninety","九十","名詞"],[1179,"nobody","沒有人","代名詞"],[1180,"nod","點頭","動詞"],[1181,"noise","噪音","名詞"],[1182,"noisy","吵鬧的","形容詞"],[1183,"noodle","麵條","名詞"],[1184,"noon","中午","名詞"],[1185,"nor","也不","連接詞"],[1186,"north","北方的","形容詞"],[1187,"nose","鼻子","名詞"],[1188,"note","筆記;音符","名詞"],[1189,"notebook","筆記本","名詞"],[1190,"nothing","沒有東西","代名詞"],[1191,"notice","注意到","動詞"],[1192,"notice","注意到","動詞"],[1193,"novel","小說","名詞"],[1194,"November","十一月","名詞"],[1195,"now","現在","副詞"],[1196,"number","數字;數量","名詞"],[1197,"nurse","護士","名詞"],[1198,"nut","堅果","名詞"],[1199,"o' clock","…點鐘","副詞"],[1200,"obey","服從","動詞"],[1201,"ocean","海洋","名詞"],[1202,"October","十月","名詞"],[1203,"of","……的;關於","介系詞"],[1204,"off","離開;從…下來","介系詞"],[1205,"offer","提供","動詞"],[1206,"office","辦公室","名詞"],[1207,"often","經常","副詞"],[1208,"oil","油","名詞"],[1209,"old","年老的","形容詞"],[1210,"omit","省略","動詞"],[1211,"on","在…上面(接觸)","介系詞"],[1212,"once","曾經;一次","副詞"],[1213,"one","一","名詞"],[1214,"onion","洋蔥","名詞"],[1215,"open","打開","動詞"],[1216,"operation","操作;手術","名詞"],[1217,"opinion","意見","名詞"],[1218,"or","或者","連接詞"],[1219,"orange","柳橙","名詞"],[1220,"orange","橙色","名詞"],[1221,"order","點餐","動詞"],[1222,"order","命令;訂單","名詞"],[1223,"ordinary","普通的","形容詞"],[1224,"our","我們的","所有格"],[1225,"our","我們的","所有格"],[1226,"ours","我們的","代名詞"],[1227,"ourselves","我們自己","代名詞"],[1228,"out of","從…裡面出來","介系詞"],[1229,"outside","在…外面","介系詞"],[1230,"oven","烤箱","名詞"],[1231,"over","在…正上方;越過","介系詞"],[1232,"overpass","天橋;陸橋","名詞"],[1233,"overseas","海外的","形容詞"],[1234,"over-weight","過重的","形容詞"],[1235,"own","擁有","動詞"],[1236,"OX","公牛","名詞"],[1237,"pack","包","名詞"],[1238,"pack","打包","動詞"],[1239,"package","包裹","名詞"],[1240,"page","頁","名詞"],[1241,"pain","疼痛","名詞"],[1242,"painful","疼痛的","形容詞"],[1243,"paint","繪畫","動詞"],[1244,"painter","畫家","名詞"],[1245,"pair","一雙:一對","名詞"],[1246,"pajamas","睡衣","名詞"],[1247,"pale","蒼白的","形容詞"],[1248,"pan","平底鍋","名詞"],[1249,"panda","熊貓","名詞"],[1250,"pants","褲子","名詞"],[1251,"papaya","木瓜","名詞"],[1252,"paper","紙","名詞"],[1253,"parent","父母","名詞"],[1254,"park","公園","名詞"],[1255,"park","停車","動詞"],[1256,"parking lot","停車場","名詞"],[1257,"parrot","鸚鵡","名詞"],[1258,"part","部分","名詞"],[1259,"partner","夥伴;伴侶","名詞"],[1260,"party","派對:政黨","名詞"],[1261,"pass","通過","動詞"],[1262,"passenger","乘客","名詞"],[1263,"past","過(用於時間)","介系詞"],[1264,"paste","貼上","動詞"],[1265,"path","小徑","名詞"],[1266,"patient","有耐心的","形容詞"],[1267,"pattern","模式","名詞"],[1268,"pause","暫停","動詞"],[1269,"pay","支付","動詞"],[1270,"peace","和平","名詞"],[1271,"peaceful","和平的","形容詞"],[1272,"peach","桃子","名詞"],[1273,"pear","梨子","名詞"],[1274,"pen","筆","名詞"],[1275,"pencil","鉛筆","名詞"],[1276,"pencil box","鉛筆盒","名詞"],[1277,"people","人們","名詞"],[1278,"pepper","胡椒","名詞"],[1279,"perfect","完美的","形容詞"],[1280,"period","時期","名詞"],[1281,"person","人","名詞"],[1282,"personal","個人的","形容詞"],[1283,"pet","寵物","名詞"],[1284,"photo","照片","名詞"],[1285,"physics","物理","名詞"],[1286,"piano","鋼琴","名詞"],[1287,"pick","撿起;選擇","動詞"],[1288,"picnic","野餐","名詞"],[1289,"picture","圖片","名詞"],[1290,"pie","派","名詞"],[1291,"piece","片;塊;件","名詞"],[1292,"pig","豬","名詞"],[1293,"pigeon","鴿子","名詞"],[1294,"pile","堆","名詞"],[1295,"pillow","枕頭","名詞"],[1296,"pin","大頭針","名詞"],[1297,"pineapple","鳳梨","名詞"],[1298,"pink","粉色","名詞"],[1299,"pipe","管子","名詞"],[1300,"pizza","披薩","名詞"],[1301,"place","地方","名詞"],[1302,"plain","平原","名詞"],[1303,"plan","計劃","動詞"],[1304,"planet","行星","名詞"],[1305,"plant","種植","動詞"],[1306,"plate","平盤","名詞"],[1307,"platform","月台","名詞"],[1308,"player","玩家:球員","名詞"],[1309,"playground","操場:遊樂場","名詞"],[1310,"plus","加號","名詞"],[1311,"pocket","口袋","名詞"],[1312,"poem","詩","名詞"],[1313,"point","點:尖端","名詞"],[1314,"poison","毒藥","名詞"],[1315,"police officer","警察","名詞"],[1316,"police station","警察局","名詞"],[1317,"polite","有禮貌的","形容詞"],[1318,"pollute","污染","動詞"],[1319,"pollution","污染","名詞"],[1320,"pond","池塘","名詞"],[1321,"pool","游泳池","名詞"],[1322,"pool","水池","名詞"],[1323,"poor","貧窮的;可憐的","形容詞"],[1324,"pop music","流行音樂","名詞"],[1325,"popcorn","爆米花","名詞"],[1326,"popular","受歡迎的","形容詞"],[1327,"population","人口","名詞"],[1328,"pork","豬肉","名詞"],[1329,"position","位置","名詞"],[1330,"positive","正面的;陽性的","形容詞"],[1331,"possible","可能的","形容詞"],[1332,"post office","郵局","名詞"],[1333,"postcard","明信片","名詞"],[1334,"potato","馬鈴薯","名詞"],[1335,"pound","磅","名詞"],[1336,"powder","粉末","名詞"],[1337,"power","力量:電力","名詞"],[1338,"practice","練習","動詞"],[1339,"praise","讚美","動詞"],[1340,"pray","祈禱","動詞"],[1341,"precious","珍貴的","形容詞"],[1342,"prepare","準備","動詞"],[1343,"prepare","準備","動詞"],[1344,"present","禮物","名詞"],[1345,"present","現在的;出席的","形容詞"],[1346,"president","總統","名詞"],[1347,"pressure","壓力","名詞"],[1348,"price","價格","名詞"],[1349,"priest","神父","名詞"],[1350,"prince","王子","名詞"],[1351,"princess","公主","名詞"],[1352,"principal","校長","名詞"],[1353,"principle","原則","名詞"],[1354,"print","列印","動詞"],[1355,"printer","印表機","名詞"],[1356,"private","私人的","形容詞"],[1357,"prize","獎品","名詞"],[1358,"problem","問題","名詞"],[1359,"produce","生產","動詞"],[1360,"production","生產","名詞"],[1361,"program","節目;程式","名詞"],[1362,"progress","進步","名詞"],[1363,"project","專案","名詞"],[1364,"promise","承諾","動詞"],[1365,"pronounce","發音","動詞"],[1366,"protect","保護","動詞"],[1367,"proud","驕傲的","形容詞"],[1368,"provide","提供","動詞"],[1369,"public","公眾的;公共的","形容詞"],[1370,"pull","拉","動詞"],[1371,"pumpkin","南瓜","名詞"],[1372,"punish","懲罰","動詞"],[1373,"puppy","小狗","名詞"],[1374,"purple","紫色","名詞"],[1375,"purpose","目的","名詞"],[1376,"purse","錢包(女用)","名詞"],[1377,"push","推","動詞"],[1378,"put","放","動詞"],[1379,"puzzle","拼圖;謎題","名詞"],[1380,"quarter","一刻鐘;四分之一","名詞"],[1381,"queen","女王","名詞"],[1382,"question","問題","名詞"],[1383,"quiet","安靜的","形容詞"],[1384,"quit","退出","動詞"],[1385,"quiz","小考","名詞"],[1386,"rabbit","兔子","名詞"],[1387,"race","賽跑;競賽","名詞"],[1388,"radio","收音機","名詞"],[1389,"railroad","鐵路","名詞"],[1390,"railway","鐵道","名詞"],[1391,"rain","下雨","動詞"],[1392,"rainbow","彩虹","名詞"],[1393,"raincoat","雨衣","名詞"],[1394,"rainy","下雨的","形容詞"],[1395,"raise","提高;撫養","動詞"],[1396,"rare","稀有的","形容詞"],[1397,"rat","大鼠","名詞"],[1398,"reach","到達","動詞"],[1399,"read","閱讀","動詞"],[1400,"ready","準備好的","形容詞"],[1401,"real","真實的","形容詞"],[1402,"realize","意識到","動詞"],[1403,"really","真地","副詞"],[1404,"reason","理由","名詞"],[1405,"receive","接收","動詞"],[1406,"record","紀錄","名詞"],[1407,"recover","恢復;痊癒","動詞"],[1408,"rectangle","長方形","名詞"],[1409,"recycle","回收","動詞"],[1410,"red","紅色","名詞"],[1411,"refrigerator","冰箱","名詞"],[1412,"refuse","拒絕","動詞"],[1413,"regret","後悔","動詞"],[1414,"regular","規律的;定期的","形容詞"],[1415,"reject","拒絕","動詞"],[1416,"relative","親戚","名詞"],[1417,"remember","記得","動詞"],[1418,"remind","提醒","動詞"],[1419,"rent","租用","動詞"],[1420,"repair","修復","動詞"],[1421,"repeat","重複","動詞"],[1422,"report","報告","名詞"],[1423,"reporter","記者","名詞"],[1424,"respect","尊重","動詞"],[1425,"responsible","負責的","形容詞"],[1426,"rest","休息","動詞"],[1427,"restaurant","餐廳","名詞"],[1428,"restroom","洗手間","名詞"],[1429,"result","結果","名詞"],[1430,"return","歸還","動詞"],[1431,"review","複習","動詞"],[1432,"revise","修改","動詞"],[1433,"rice","米飯","名詞"],[1434,"rich","有錢的","形容詞"],[1435,"ride","騎乘:搭乘","動詞"],[1436,"right","右邊的","形容詞"],[1437,"right","正確的;右邊的","形容詞"],[1438,"ring","戒指","名詞"],[1439,"rise","上升","動詞"],[1440,"river","河流","名詞"],[1441,"rob","搶劫","動詞"],[1442,"robot","機器人","名詞"],[1443,"rock","岩石","名詞"],[1444,"role","角色","名詞"],[1445,"roll","滾動","動詞"],[1446,"roller blade","溜直排輪","動詞"],[1447,"roller skate","溜輪鞋","動詞"],[1448,"roof","屋頂","名詞"],[1449,"room","房間","名詞"],[1450,"root","根","名詞"],[1451,"rope","繩子","名詞"],[1452,"rose","玫瑰","名詞"],[1453,"round","圓形的","形容詞"],[1454,"row","排;行","名詞"],[1455,"rub","摩擦","動詞"],[1456,"rude","粗魯的","形容詞"],[1457,"ruin","毀滅","動詞"],[1458,"rule","規則","名詞"],[1459,"ruler","尺","名詞"],[1460,"run","跑步","動詞"],[1461,"run","跑","動詞"],[1462,"sad","難過的","形容詞"],[1463,"safe","安全的","形容詞"],[1464,"safety","安全","名詞"],[1465,"sail","航行","動詞"],[1466,"sail","航行","動詞"],[1467,"sailor","水手","名詞"],[1468,"salad","沙拉","名詞"],[1469,"sale","拍賣:銷售","名詞"],[1470,"salesman","銷售員","名詞"],[1471,"salt","鹽","名詞"],[1472,"same","相同的","形容詞"],[1473,"sample","樣品","名詞"],[1474,"sand","沙子","名詞"],[1475,"sandwich","三明治","名詞"],[1476,"satisfy","滿足","動詞"],[1477,"Saturday","星期六","名詞"],[1478,"save","拯救;儲存","動詞"],[1479,"say","說","動詞"],[1480,"scared","害怕的","形容詞"],[1481,"scared","害怕的","形容詞"],[1482,"scarf","圍巾","名詞"],[1483,"scene","場景","名詞"],[1484,"scenery","風景","名詞"],[1485,"school","學校","名詞"],[1486,"science","科學","名詞"],[1487,"scientist","科學家","名詞"],[1488,"scooter","速克達;小摩托車","名詞"],[1489,"score","分數","名詞"],[1490,"screen","螢幕","名詞"],[1491,"sea","海","名詞"],[1492,"seafood","海鮮","名詞"],[1493,"search","搜尋","動詞"],[1494,"season","季節","名詞"],[1495,"seat","座位","名詞"],[1496,"second","第二","名詞"],[1497,"second","秒","名詞"],[1498,"secondary","次要的","形容詞"],[1499,"secret","秘密","名詞"],[1500,"secretary","秘書","名詞"],[1501,"section","部分","名詞"],[1502,"see","看見","動詞"],[1503,"seed","種子","名詞"],[1504,"seem","似乎","動詞"],[1505,"seesaw","翹翹板","名詞"],[1506,"seldom","很少","副詞"],[1507,"select","選擇","動詞"],[1508,"selfish","自私的","形容詞"],[1509,"sell","賣","動詞"],[1510,"semester","學期","名詞"],[1511,"send","傳送","動詞"],[1512,"senior high school","高中","名詞"],[1513,"sense","感覺;理智","名詞"],[1514,"sentence","句子","名詞"],[1515,"September","九月","名詞"],[1516,"serious","嚴肅的;嚴重的","形容詞"],[1517,"servant","僕人","名詞"],[1518,"serve","服務","動詞"],[1519,"service","服務","名詞"],[1520,"set","一套","名詞"],[1521,"seven","七","名詞"],[1522,"seventeen","十七","名詞"],[1523,"seventy","七十","名詞"],[1524,"several","幾個","限定詞"],[1525,"shake","搖動","動詞"],[1526,"shape","形狀","名詞"],[1527,"share","分享","動詞"],[1528,"shark","鯊魚","名詞"],[1529,"sharp","鋒利的;尖銳的","形容詞"],[1530,"she","她","代名詞 (主格)"],[1531,"sheep","綿羊","名詞"],[1532,"sheet","床單","名詞"],[1533,"sheet","一張(紙)","名詞"],[1534,"shelf","架子","名詞"],[1535,"shine","照耀","動詞"],[1536,"ship","船(大船)","名詞"],[1537,"shirt","襯衫","名詞"],[1538,"shoes","鞋子","名詞"],[1539,"shoot","射擊","動詞"],[1540,"shop","商店","名詞"],[1541,"shopkeeper","店主","名詞"],[1542,"shore","岸","名詞"],[1543,"short","矮的","形容詞"],[1544,"short","短的:矮的","形容詞"],[1545,"shorts","短褲","名詞"],[1546,"shoulder","肩膀","名詞"],[1547,"shout","喊叫","動詞"],[1548,"show","展示","動詞"],[1549,"shower","陣雨","名詞"],[1550,"shrimp","蝦","名詞"],[1551,"shrimp","蝦","名詞"],[1552,"shut","關閉","動詞"],[1553,"shy","害羞的","形容詞"],[1554,"sick","生病的","形容詞"],[1555,"side","邊;側","名詞"],[1556,"sidewalk","人行道","名詞"],[1557,"sight","景象","名詞"],[1558,"sign","簽名","動詞"],[1559,"silence","寂靜","名詞"],[1560,"silent","沉默的","形容詞"],[1561,"silly","傻的","形容詞"],[1562,"silver","銀","名詞"],[1563,"similar","相似的","形容詞"],[1564,"since","自從…","介系詞"],[1565,"since","自從;既然","連接詞"],[1566,"sincere","真誠的","形容詞"],[1567,"sing","唱歌","動詞"],[1568,"singer","歌手","名詞"],[1569,"single","單一的;單身部","形容詞"],[1570,"sink","水槽","名詞"],[1571,"sister","姊妹","名詞"],[1572,"six","六","名詞"],[1573,"sixteen","十六","名詞"],[1574,"sixty","六十","名詞"],[1575,"size","尺寸","名詞"],[1576,"skate","溜冰","動詞"],[1577,"ski","滑雪","動詞"],[1578,"skill","技能","名詞"],[1579,"skillful","熟練的","形容詞"],[1580,"skin","皮膚","名詞"],[1581,"skinny","極瘦的","形容詞"],[1582,"skirt","裙子","名詞"],[1583,"sky","天空","名詞"],[1584,"sleep","睡覺","動詞"],[1585,"sleepy","想睡的","形容詞"],[1586,"slender","苗條的","形容詞"],[1587,"slice","切片","動詞"],[1588,"slide","溜滑梯","名詞"],[1589,"slim","纖細的","形容詞"],[1590,"slippers","拖鞋","名詞"],[1591,"slow","慢的","形容詞"],[1592,"small","小的","形容詞"],[1593,"smart","聰明的","形容詞"],[1594,"smell","聞","動詞"],[1595,"smile","微笑","名詞"],[1596,"smoke","抽煙","動詞"],[1597,"snack","點心","名詞"],[1598,"snail","蝸牛","名詞"],[1599,"snake","蛇","名詞"],[1600,"sneakers","運動鞋","名詞"],[1601,"sneaky","鬼鬼祟祟的","形容詞"],[1602,"snow","雪","名詞"],[1603,"snowy","下雪的","形容詞"],[1604,"so","如此;這麼","副詞"],[1605,"soap","肥皂","名詞"],[1606,"soccer","足球","名詞"],[1607,"social","社會的;社交的","形容詞"],[1608,"social science","社會科學","名詞"],[1609,"society","社會","名詞"],[1610,"socks","襪子","名詞"],[1611,"soda","汽水","名詞"],[1612,"sofa","沙發","名詞"],[1613,"soft drink","軟性飲料","名詞"],[1614,"softball","壘球","名詞"],[1615,"soldier","士兵","名詞"],[1616,"solve","解決","動詞"],[1617,"some","一些","代名詞"],[1618,"someone","某人","代名詞"],[1619,"something","某事","代名詞"],[1620,"sometimes","有時候","副詞"],[1621,"somewhere","某個地方","副詞"],[1622,"son","兒子","名詞"],[1623,"song","歌曲","名詞"],[1624,"soon","很快;不久","副詞"],[1625,"sore throat","喉嚨痛","名詞"],[1626,"sorry","抱歉的;難過的","形容詞"],[1627,"soul","靈魂","名詞"],[1628,"sound","聽起來","動詞"],[1629,"soup","湯","名詞"],[1630,"sour","酸的","形容詞"],[1631,"south","南方的","形容詞"],[1632,"soy sauce","醬油","名詞"],[1633,"space","空間","名詞"],[1634,"spaghetti","義大利麵","名詞"],[1635,"speak","說話","動詞"],[1636,"speaker","喇叭","名詞"],[1637,"special","特別的","形容詞"],[1638,"speech","演講","名詞"],[1639,"speed","速度","名詞"],[1640,"spell","拼寫","動詞"],[1641,"spend","花費","動詞"],[1642,"spider","蜘蛛","名詞"],[1643,"spirit","精神","名詞"],[1644,"spoon","湯匙","名詞"],[1645,"sports","運動","名詞"],[1646,"spot","污點","名詞"],[1647,"spread","塗抹","動詞"],[1648,"spring","春天","名詞"],[1649,"spring","泉水","名詞"],[1650,"square","正方形","名詞"],[1651,"stairs","樓梯","名詞"],[1652,"stamp","郵票","名詞"],[1653,"stand","站立","動詞"],[1654,"star","星星","名詞"],[1655,"start","開始","動詞"],[1656,"state","狀態;州","名詞"],[1657,"station","車站","名詞"],[1658,"stationery store","文具店","名詞"],[1659,"stay","停留","動詞"],[1660,"steak","牛排","名詞"],[1661,"steal","偷竊","動詞"],[1662,"steam","蒸汽","名詞"],[1663,"step","步驟;腳步","名詞"],[1664,"still","仍然","副詞"],[1665,"stingy","小氣的","形容詞"],[1666,"stomach","胃","名詞"],[1667,"stomachache","胃痛","名詞"],[1668,"stone","石頭","名詞"],[1669,"stop","停止","動詞"],[1670,"stopwatch","碼表","名詞"],[1671,"store","商店","名詞"],[1672,"storm","暴風雨","名詞"],[1673,"stormy","暴風雨的","形容詞"],[1674,"story","故事","名詞"],[1675,"story","故事","名詞"],[1676,"stove","爐子","名詞"],[1677,"straight","直的","形容詞"],[1678,"strange","奇怪的","形容詞"],[1679,"stranger","陌生人","名詞"],[1680,"straw","吸管","名詞"],[1681,"strawberry","草莓","名詞"],[1682,"stream","溪流","名詞"],[1683,"street","街道","名詞"],[1684,"strike","打擊;罷工","動詞"],[1685,"string","細繩","名詞"],[1686,"strong","強壯的","形容詞"],[1687,"student","學生","名詞"],[1688,"study","研讀","動詞"],[1689,"stupid","笨的","形容詞"],[1690,"style","風格","名詞"],[1691,"subject","主題;科目","名詞"],[1692,"subway","地鐵","名詞"],[1693,"succeed","成功","動詞"],[1694,"success","成功","名詞"],[1695,"successful","成功的","形容詞"],[1696,"sudden","突然的","形容詞"],[1697,"sugar","糖","名詞"],[1698,"suggest","建議","動詞"],[1699,"suit","西裝","名詞"],[1700,"summer","夏天","名詞"],[1701,"sun","太陽","名詞"],[1702,"Sunday","星期日","名詞"],[1703,"sunny","陽光充足的","形容詞"],[1704,"super","超級的","形容詞"],[1705,"supermarket","超市","名詞"],[1706,"supper","消夜","名詞"],[1707,"support","支持","動詞"],[1708,"surf","衝浪","動詞"],[1709,"surprise","使驚訝","動詞"],[1710,"surprised","感到驚訝的","形容詞"],[1711,"survive","生存","動詞"],[1712,"swallow","吞嚥","動詞"],[1713,"swan","天鵝","名詞"],[1714,"sweater","毛衣","名詞"],[1715,"sweep","清掃","動詞"],[1716,"sweet","甜的","形容詞"],[1717,"swim","游泳","動詞"],[1718,"swimsuit","泳衣","名詞"],[1719,"swing","鞦韆;搖擺","名詞"],[1720,"symbol","符號","名詞"],[1721,"system","系統","名詞"],[1722,"table","桌子","名詞"],[1723,"table tennis","桌球","名詞"],[1724,"tail","尾巴","名詞"],[1725,"Taiwanese","台灣人","名詞"],[1726,"take","拿:帶","動詞"],[1727,"talent","天賦","名詞"],[1728,"talk","談話","動詞"],[1729,"talkative","健談的","形容詞"],[1730,"tall","高的","形容詞"],[1731,"tangerine","橘子","名詞"],[1732,"tank","坦克車","名詞"],[1733,"taste","嘗起來","動詞"],[1734,"taxi","計程車","名詞"],[1735,"tea","茶","名詞"],[1736,"teach","教學","動詞"],[1737,"teacher","老師","名詞"],[1738,"Teacher's Day","教師節","名詞"],[1739,"team","隊伍","名詞"],[1740,"teapot","茶壺","名詞"],[1741,"tear","眼淚","名詞"],[1742,"teenager","青少年","名詞"],[1743,"telephone","電話","名詞"],[1744,"television","電視","名詞"],[1745,"tell","告訴","動詞"],[1746,"temperature","溫度","名詞"],[1747,"temple","寺廟","名詞"],[1748,"ten","十","名詞"],[1749,"tennis","網球","名詞"],[1750,"tent","帳篷","名詞"],[1751,"term","學期","名詞"],[1752,"terrible","糟糕的;可怕的","形容詞"],[1753,"terrific","極好的","形容詞"],[1754,"test","測驗","名詞"],[1755,"textbook","教科書","名詞"],[1756,"than","比…","介系詞"],[1757,"than","比","連接詞"],[1758,"thank","感謝","動詞"],[1759,"Thanksgiving","感恩節","名詞"],[1760,"that","那個(遠指單數)","限定詞"],[1761,"theater","劇院","名詞"],[1762,"their","他們的","所有格"],[1763,"their","他們的;它們的","所有格"],[1764,"theirs","他們的;它們的","代名詞"],[1765,"them","他們;它們","代名詞 (受格)"],[1766,"themselves","他們自己;它們自己","代名詞"],[1767,"then","然後","副詞"],[1768,"therefore","因此","副詞"],[1769,"these","這些(近指複數)","限定詞"],[1770,"they","他們;它們","代名詞 (主格)"],[1771,"thick","厚的","形容詞"],[1772,"thief","小偷","名詞"],[1773,"thin","瘦的","形容詞"],[1774,"thing","東西","名詞"],[1775,"think","思考","動詞"],[1776,"third","第三","名詞"],[1777,"thirsty","渴的","形容詞"],[1778,"thirteen","十三","名詞"],[1779,"thirty","三十","名詞"],[1780,"this","這個(近指單數)","限定詞"],[1781,"those","那些(遠指複數)","限定詞"],[1782,"though","雖然","連接詞"],[1783,"thought","想法","名詞"],[1784,"thousand","千","名詞"],[1785,"three","三","名詞"],[1786,"throat","喉嚨","名詞"],[1787,"through","穿過;透過","介系詞"],[1788,"throw","丟擲","動詞"],[1789,"thumb","拇指","名詞"],[1790,"thunder","雷聲","名詞"],[1791,"Thursday","星期四","名詞"],[1792,"ticket","票","名詞"],[1793,"tidy","整潔的","形容詞"],[1794,"tie","領帶","名詞"],[1795,"tiger","老虎","名詞"],[1796,"time","時間","名詞"],[1797,"tiny","微小的","形容詞"],[1798,"tip","小費;提示","名詞"],[1799,"tired","疲倦的","形容詞"],[1800,"title","標題","名詞"],[1801,"to","到……;向………","介系詞"],[1802,"toast","吐司","名詞"],[1803,"today","今天","名詞"],[1804,"toe","腳趾","名詞"],[1805,"tofu","豆腐","名詞"],[1806,"together","一起","副詞"],[1807,"toilet","馬桶","名詞"],[1808,"tomato","番茄","名詞"],[1809,"tomorrow","明天","名詞"],[1810,"tongue","舌頭","名詞"],[1811,"tonight","今晚","名詞"],[1812,"tool","工具","名詞"],[1813,"tooth","牙齒","名詞"],[1814,"toothache","牙痛","名詞"],[1815,"toothbrush","牙刷","名詞"],[1816,"top","頂部的","形容詞"],[1817,"topic","話題","名詞"],[1818,"total","總數","名詞"],[1819,"touch","觸摸","動詞"],[1820,"toward","朝向…","介系詞"],[1821,"towel","毛巾","名詞"],[1822,"tower","塔","名詞"],[1823,"town","城鎮","名詞"],[1824,"toy","玩具","名詞"],[1825,"trade","貿易","名詞"],[1826,"tradition","傳統","名詞"],[1827,"traditional","傳統的","形容詞"],[1828,"traffic","交通","名詞"],[1829,"train","火車","名詞"],[1830,"train station","火車站","名詞"],[1831,"trash","垃圾","名詞"],[1832,"trash can","垃圾桶","名詞"],[1833,"travel","旅行","動詞"],[1834,"treasure","寶藏","名詞"],[1835,"treat","款待","名詞"],[1836,"treat","對待","動詞"],[1837,"tree","樹","名詞"],[1838,"triangle","三角形","名詞"],[1839,"trick","詭計","名詞"],[1840,"trip","旅行","名詞"],[1841,"trouble","麻煩","名詞"],[1842,"truck","卡車","名詞"],[1843,"trumpet","小喇叭","名詞"],[1844,"trust","信任","動詞"],[1845,"truth","真相","名詞"],[1846,"try","嘗試","動詞"],[1847,"T-shirt","T恤","名詞"],[1848,"tub","浴缸","名詞"],[1849,"tube","管子","名詞"],[1850,"Tuesday","星期二","名詞"],[1851,"tunnel","隧道","名詞"],[1852,"turkey","火雞","名詞"],[1853,"turn","轉彎","動詞"],[1854,"turtle","烏龜","名詞"],[1855,"twelve","十二","名詞"],[1856,"twenty","二十","名詞"],[1857,"twice","兩次","副詞"],[1858,"two","二","名詞"],[1859,"type","打字","動詞"],[1860,"typhoon","颱風","名詞"],[1861,"ugly","醜陋的","形容詞"],[1862,"umbrella","雨傘","名詞"],[1863,"umbrella","雨傘","名詞"],[1864,"uncle","叔叔:舅舅","名詞"],[1865,"under","在…下面","介系詞"],[1866,"underline","畫底線","動詞"],[1867,"underpass","地下道","名詞"],[1868,"understand","理解","動詞"],[1869,"underwear","內衣","名詞"],[1870,"under-weight","體重不足的","形容詞"],[1871,"unhappy","不快樂的","形容詞"],[1872,"uniform","制服","名詞"],[1873,"unique","獨特的","形容詞"],[1874,"universe","宇宙","名詞"],[1875,"university","大學","名詞"],[1876,"until","直到…","介系詞"],[1877,"up","沿…而上","介系詞"],[1878,"upload","上傳","動詞"],[1879,"upstairs","樓上","名詞"],[1880,"us","我們","代名詞 (受格)"],[1881,"use","使用","動詞"],[1882,"useful","有用的","形容詞"],[1883,"usually","通常","副詞"],[1884,"vacation","假期","名詞"],[1885,"Valentine's Day","情人節","名詞"],[1886,"valley","山谷","名詞"],[1887,"valuable","有價值的","形容詞"],[1888,"value","價值","名詞"],[1889,"vegetable","蔬菜","名詞"],[1890,"vendor","小販","名詞"],[1891,"very","非常","副詞"],[1892,"vest","背心","名詞"],[1893,"victory","勝利","名詞"],[1894,"video","影片;錄影機","名詞"],[1895,"village","村莊","名詞"],[1896,"vinegar","醋","名詞"],[1897,"violin","小提琴","名詞"],[1898,"visit","拜訪","動詞"],[1899,"visitor","訪客","名詞"],[1900,"vocabulary","字彙","名詞"],[1901,"voice","聲音","名詞"],[1902,"volleyball","排球","名詞"],[1903,"vote","投票","動詞"],[1904,"waist","腰部","名詞"],[1905,"wait","等待","動詞"],[1906,"waiter","服務生(男性)","名詞"],[1907,"waitress","服務生(女性)","名詞"],[1908,"wake","醒來","動詞"],[1909,"walk","走路","動詞"],[1910,"wall","牆","名詞"],[1911,"wallet","皮夾(男用)","名詞"],[1912,"want","想要","動詞"],[1913,"war","戰爭","名詞"],[1914,"warm","溫暖的","形容詞"],[1915,"wash","清洗","動詞"],[1916,"waste","浪費","動詞"],[1917,"watch","手錶","名詞"],[1918,"watch","觀看","動詞"],[1919,"water","水","名詞"],[1920,"waterfalls","瀑布","名詞"],[1921,"watermelon","西瓜","名詞"],[1922,"wave","揮手","動詞"],[1923,"way","方式:道路","名詞"],[1924,"we","我們","代名詞 (主格)"],[1925,"weak","虛弱的","形容詞"],[1926,"wear","穿著","動詞"],[1927,"weather","天氣","名詞"],[1928,"wedding","婚禮","名詞"],[1929,"Wednesday","星期三","名詞"],[1930,"week","星期:週","名詞"],[1931,"week","星期;週","名詞"],[1932,"weekday","平日(週一至週五)","名詞"],[1933,"weekend","週末","名詞"],[1934,"weekend","週末","名詞"],[1935,"weight","重量","名詞"],[1936,"welcome","歡迎","動詞"],[1937,"well","身體健康的","形容詞"],[1938,"west","西方的","形容詞"],[1939,"wet","潮濕的","形容詞"],[1940,"whale","鯨魚","名詞"],[1941,"what","什麼","疑問詞"],[1942,"wheel","輪子","名詞"],[1943,"when","何時","疑問詞"],[1944,"where","在哪裡","疑問詞"],[1945,"whether","是否","連接詞"],[1946,"which","哪一個","疑問詞"],[1947,"while","當…時;然而","連接詞"],[1948,"white","白色","名詞"],[1949,"who","誰","疑問詞"],[1950,"whose","誰的","疑問詞"],[1951,"why","為什麼","疑問詞"],[1952,"wide","寬的","形容詞"],[1953,"wife","妻子","名詞"],[1954,"wild","野生的;狂野的","形容詞"],[1955,"win","贏得","動詞"],[1956,"wind","風","名詞"],[1957,"window","窗戶","名詞"],[1958,"windy","多風的","形容詞"],[1959,"wing","翅膀","名詞"],[1960,"winner","贏家","名詞"],[1961,"winter","冬天","名詞"],[1962,"wise","有智慧的","形容詞"],[1963,"wish","希望","動詞"],[1964,"with","和…一起;用…","介系詞"],[1965,"without","沒有……","介系詞"],[1966,"wok","炒鍋","名詞"],[1967,"wolf","狼","名詞"],[1968,"woman","女人","名詞"],[1969,"women's room","女廁","名詞"],[1970,"wonderful","美妙的","形容詞"],[1971,"wood","木材","名詞"],[1972,"woods","樹林","名詞"],[1973,"word","字詞","名詞"],[1974,"workbook","練習本","名詞"],[1975,"worm","蠕蟲","名詞"],[1976,"worry","擔心","動詞"],[1977,"wound","創傷:傷口","名詞"],[1978,"wrist","手腕","名詞"],[1979,"write","書寫","動詞"],[1980,"writer","作家","名詞"],[1981,"wrong","錯誤的","形容詞"],[1982,"yard","院子","名詞"],[1983,"yard","碼","名詞"],[1984,"year","年","名詞"],[1985,"yell","大叫","動詞"],[1986,"yellow","黃色","名詞"],[1987,"yesterday","昨天","名詞"],[1988,"yet","尚未;但是","副詞"],[1989,"you","你;你們","代名詞 (主/受格)"],[1990,"young","年輕的","形容詞"],[1991,"your","你的;你們的","所有格"],[1992,"your","你的;你們的","所有格"],[1993,"yours","你的;你們的","代名詞"],[1994,"yourself","你自己","代名詞"],[1995,"yourselves","你們自己","代名詞"],[1996,"youth","青年","名詞"],[1997,"yummy","好吃的","形容詞"],[1998,"zebra","斑馬","名詞"],[1999,"zero","零","名詞"],[2000,"ZOO","動物園","名詞"]
+            [1,"a few","一些(用於可數)","限定詞"], [2,"a little","一點(用於不可數)","限定詞"], [3,"a lot","很多","副詞"], [4,"able","能夠的","形容詞"], [5,"about","關於;大約","介系詞"], [6,"above","在…上面","介系詞"], [7,"abroad","在國外","副詞"], [8,"absent","缺席的","形容詞"], [9,"accept","接受","動詞"], [10,"accident","事故","名詞"], [11,"across","橫越","介系詞"], [12,"act","表演;行動","動詞"], [13,"action","行動","名詞"], [14,"active","活躍的","形容詞"], [15,"activity","活動","名詞"], [16,"actor","男演員","名詞"], [17,"actress","女演員","名詞"], [18,"actually","實際上","副詞"], [19,"add","增加","動詞"], [20,"admire","欽佩","動詞"], [21,"adult","成年人","名詞"], [22,"advertisement","廣告","名詞"], [23,"advice","建議","名詞"], [24,"advise","建議","動詞"], [25,"affect","影響","動詞"], [26,"afraid","害怕的","形容詞"], [27,"after","在…之後","介系詞"], [28,"afternoon","下午","名詞"], [29,"again","再次","副詞"], [30,"against","反對;靠著","介系詞"], [31,"age","年齡;時代","名詞"], [32,"ago","以前","副詞"], [33,"agree","同意","動詞"], [34,"ahead","在前面","副詞"], [35,"aim","目標","名詞"], [36,"air","空氣","名詞"], [37,"air conditioner","空調","名詞"], [38,"airlines","航空公司","名詞"], [39,"airplane","飛機","名詞"], [40,"airport","機場","名詞"], [41,"alarm","鬧鐘:警報","名詞"], [42,"alarm clock","鬧鐘","名詞"], [43,"album","相冊:專輯","名詞"], [44,"alike","相似的","形容詞"], [45,"alive","活著的","形容詞"], [46,"all","全部;所有","代名詞"], [47,"allow","允許","動詞"], [48,"almost","幾乎","副詞"], [49,"along","沿著","介系詞"], [50,"aloud","大聲地","副詞"], [51,"already","已經","副詞"], [52,"always","總是","副詞"], [53,"ambulance","救護車","名詞"], [54,"American","美國人","名詞"], [55,"among","在…之中(三者以上)","介系詞"], [56,"amount","數量","名詞"], [57,"ancient","古代的","形容詞"], [58,"and","和;並且","連接詞"], [59,"angel","天使","名詞"], [60,"anger","憤怒","名詞"], [61,"angle","角度","名詞"], [62,"angry","生氣的","形容詞"], [63,"animal","動物","名詞"], [64,"ankle","腳踝","名詞"], [65,"another","另一個","代名詞"], [66,"answer","回答","動詞"], [67,"ant","螞蟻","名詞"], [68,"any","任何","限定詞"], [69,"any","任何","代名詞"], [70,"anyone","任何人","代名詞"], [71,"anything","任何事","代名詞"], [72,"anywhere","任何地方","副詞"], [73,"apartment","公頃","名詞"], [74,"apologize","道歉","動詞"], [75,"appear","出現","動詞"], [76,"apple","蘋果","名詞"], [77,"appreciate","欣賞;感謝","動詞"], [78,"April","四月","名詞"], [79,"area","區域","名詞"], [80,"argue","爭論","動詞"], [81,"arm","手臂","名詞"], [82,"armchair","扶手椅","名詞"], [83,"army","軍隊","名詞"], [84,"arrange","安排","動詞"], [85,"arrive","到達","動詞"], [86,"art","藝術","名詞"], [87,"artist","藝術家","名詞"], [88,"Asian","亞洲人","名詞"], [89,"ask","詢問","動詞"], [90,"asleep","睡著的","形容詞"], [91,"assistant","助理","名詞"], [92,"assume","假設","動詞"], [93,"at","在(地點、時間點)","介系詞"], [94,"attack","攻擊","動詞"], [95,"attention","注意力","名詞"], [96,"August","八月","名詞"], [97,"aunt","阿姨","名詞"], [98,"autumn","秋天","名詞"], [99,"available","可用的;有空的","形容詞"], [100,"avoid","避免","動詞"],[101,"away","離開","副詞"] , [102,"baby","嬰兒","名詞"] , [103,"baby sitter","保母","名詞"] , [104,"back","背部","名詞"] , [105,"back","後面的","形容詞"] , [106,"backpack","背包","名詞"] , [107,"backward","向後","副詞"] , [108,"bad","壞的","形容詞"] , [109,"badminton","羽毛球","名詞"] , [110,"bake","烘烤","動詞"] , [111,"bakery","麵包店","名詞"] , [112,"balcony","陽台","名詞"] , [113,"ball","球","名詞"] , [114,"balloon","氣球","名詞"] , [115,"banana","香蕉","名詞"] , [116,"band","樂團","名詞"] , [117,"band","樂隊;帶子","名詞"] , [118,"bank","銀行","名詞"] , [119,"bank","河岸","名詞"] , [120,"barbecue","烤肉","動詞"] , [121,"barber","理髮師","名詞"] , [122,"bark","吠叫","動詞"] , [123,"base","基礎;基地","名詞"] , [124,"baseball","棒球","名詞"] , [125,"basement","地下室","名詞"] , [126,"basic","基本的","形容詞"] , [127,"basket","籃子","名詞"] , [128,"basketball","籃球","名詞"] , [129,"bat","蝙蝠","名詞"] , [130,"bath","浴缸","名詞"] , [131,"bathe","洗澡","動詞"] , [132,"bathroom","浴室","名詞"] , [133,"beach","海灘","名詞"] , [134,"beach","海灘","名詞"] , [135,"bean","豆子","名詞"] , [136,"bear","熊","名詞"] , [137,"beard","鬍鬚","名詞"] , [138,"beat","打擊","動詞"] , [139,"beautiful","美麗的","形容詞"] , [140,"beauty","美麗","名詞"] , [141,"because","因為","連接詞"] , [142,"become","變成","動詞"] , [143,"bed","床","名詞"] , [144,"bedroom","臥室","名詞"] , [145,"bee","蜜蜂","名詞"] , [146,"beef","牛肉","名詞"] , [147,"beer","啤酒","名詞"] , [148,"before","在…之前","介系詞"] , [149,"begin","開始","動詞"] , [150,"beginner","初學者","名詞"] , [151,"beginning","開始","名詞"] , [152,"behave","守規矩","動詞"] , [153,"behind","在…後面","介系詞"] , [154,"believe","相信","動詞"] , [155,"bell","鈴鐺","名詞"] , [156,"belong","屬於","動詞"] , [157,"below","在…下面","介系詞"] , [158,"belt","皮帶","名詞"] , [159,"bench","長凳","名詞"] , [160,"beside","在…旁邊","介系詞"] , [161,"besides","此外;而且","副詞"] , [162,"between","在…之間(兩者)","介系詞"] , [163,"beyond","超越;在…另一邊","介系詞"] , [164,"bicycle","腳踏車","名詞"] , [165,"big","大的","形容詞"] , [166,"bill","帳單;紙鈔","名詞"] , [167,"biology","生物","名詞"] , [168,"bird","鳥","名詞"] , [169,"birthday","生日","名詞"] , [170,"bite","咬","動詞"] , [171,"bitter","苦的","形容詞"] , [172,"black","黑色","名詞"] , [173,"blackboard","黑板","名詞"] , [174,"blame","責備","動詞"] , [175,"blank","空白","名詞"] , [176,"blanket","毯子","名詞"] , [177,"bless","祝福","動詞"] , [178,"blind","失明的","形容詞"] , [179,"block","街區","名詞"] , [180,"blood","血液","名詞"] , [181,"blouse","女裝上衣","名詞"] , [182,"blow","吹","動詞"] , [183,"blow","吹","動詞"] , [184,"blue","藍色","名詞"] , [185,"board","板子","名詞"] , [186,"boat","船","名詞"] , [187,"body","身體","名詞"] , [188,"boil","煮沸","動詞"] , [189,"bomb","炸彈","名詞"] , [190,"bone","骨頭","名詞"] , [191,"book","書本","名詞"] , [192,"bookcase","書櫃","名詞"] , [193,"bookstore","書店","名詞"] , [194,"boring","令人無聊的","形容詞"] , [195,"borrow","借入","動詞"] , [196,"boss","老闆","名詞"] , [197,"both","兩者都","限定詞"] , [198,"both","兩者","代名詞"] , [199,"bother","打擾","動詞"] , [200,"bottle","瓶","名詞"] , [201,"bottom","底部","名詞"] , [202,"bow","鞠躬","動詞"] , [203,"bowl","碗","名詞"] , [204,"bowling","保齡球","名詞"] , [205,"box","盒子","名詞"] , [206,"boy","男孩","名詞"] , [207,"branch","樹枝;分支","名詞"] , [208,"brave","勇敢的","形容詞"] , [209,"bread","麵包","名詞"] , [210,"break","打破","動詞"] , [211,"breakfast","早餐","名詞"] , [212,"brick","磚塊","名詞"] , [213,"bridge","橋樑","名詞"] , [214,"bright","明亮的;聰明的","形容詞"] , [215,"bring","帶來","動詞"] , [216,"broad","寬廣的","形容詞"] , [217,"broadcast","廣播","動詞"] , [218,"brother","兄弟","名詞"] , [219,"brown","棕色","名詞"] , [220,"brunch","早午餐","名詞"] , [221,"brush","刷","動詞"] , [222,"bucket","水桶","名詞"] , [223,"buffet","自助餐","名詞"] , [224,"bug","小蟲","名詞"] , [225,"build","建造","動詞"] , [226,"building","建築物","名詞"] , [227,"bun","小圓麵包","名詞"] , [228,"bundle","捆:束","名詞"] , [229,"burn","燒焦","動詞"] , [230,"burst","爆發","動詞"] , [231,"bus","公車","名詞"] , [232,"bus stop","公車站","名詞"] , [233,"business","商業:生意","名詞"] , [234,"businessman","商人","名詞"] , [235,"busy","忙碌的","形容詞"] , [236,"but","但是","連接詞"] , [237,"butter","奶油","名詞"] , [238,"butterfly","蝴蝶","名詞"] , [239,"button","鈕扣","名詞"] , [240,"buy","購買","動詞"] , [241,"by","藉由:在…旁邊","介系詞"] , [242,"cabbage","高麗菜","名詞"] , [243,"cable","電纜","名詞"] , [244,"cafeteria","自助餐廳","名詞"] , [245,"cage","籠子","名詞"] , [246,"cake","蛋糕","名詞"] , [247,"calendar","日曆","名詞"] , [248,"call","打電話;呼叫","動詞"] , [249,"calm","使冷靜","動詞"] , [250,"camera","相機","名詞"] , [251,"camp","露營","動詞"] , [252,"campus","校園","名詞"] , [253,"can","罐頭","名詞"] , [254,"cancel","取消","動詞"] , [255,"cancer","癌症","名詞"] , [256,"candle","蠟燭","名詞"] , [257,"candy","糖果","名詞"] , [258,"cap","棒球帽","名詞"] , [259,"captain","隊長:船長","名詞"] , [260,"car","汽車","名詞"] , [261,"card","卡片","名詞"] , [262,"care","關心","動詞"] , [263,"careful","小心的","形容詞"] , [264,"careless","粗心的","形容詞"] , [265,"carpet","地毯","名詞"] , [266,"carrot","胡蘿蔔","名詞"] , [267,"carry","攜帶","動詞"] , [268,"cartoon","卡通","名詞"] , [269,"case","案例;箱子","名詞"] , [270,"cash","現金","名詞"] , [271,"castle","城堡","名詞"] , [272,"cat","貓","名詞"] , [273,"catch","抓住","動詞"] , [274,"cause","原因","名詞"] , [275,"ceiling","天花板","名詞"] , [276,"celebrate","慶祝","動詞"] , [277,"cellphone","手機","名詞"] , [278,"cent","分(貨幣單位)","名詞"] , [279,"center","中心","名詞"] , [280,"centimeter","公分","名詞"] , [281,"century","世紀","名詞"] , [282,"cereal","穀物麥片","名詞"] , [283,"certain","確定的","形容詞"] , [284,"chair","椅子","名詞"] , [285,"chalk","粉筆","名詞"] , [286,"chance","機會","名詞"] , [287,"change","零錢","名詞"] , [288,"channel","頻道;海峽","名詞"] , [289,"character","角色:性格","名詞"] , [290,"charge","收費","動詞"] , [291,"chart","圖表","名詞"] , [292,"chase","追逐","動詞"] , [293,"cheap","便宜的","形容詞"] , [294,"cheat","欺騙","動詞"] , [295,"check","檢查","動詞"] , [296,"check","檢查","動詞"] , [297,"cheer","歡呼","名詞"] , [298,"cheerleader","啦啦隊","名詞"] , [299,"cheese","起司","名詞"] , [300,"chemistry","化學","名詞"] , [301,"chess","西洋棋","名詞"] , [302,"chicken","雞肉","名詞"] , [303,"chicken","雞","名詞"] , [304,"child","小孩","名詞"] , [305,"childhood","童年","名詞"] , [306,"childish","幼稚的","形容詞"] , [307,"childlike","孩子般的","形容詞"] , [308,"chin","下巴","名詞"] , [309,"Chinese","中文","名詞"] , [310,"Chinese New Year","春節","名詞"] , [311,"chocolate","巧克力","名詞"] , [312,"choice","選擇","名詞"] , [313,"choose","選擇","動詞"] , [314,"chopsticks","筷子","名詞"] , [315,"Christmas","聖誕節","名詞"] , [316,"chubby","圓胖的","形容詞"] , [317,"church","教堂","名詞"] , [318,"circle","圓形","名詞"] , [319,"city","城市","名詞"] , [320,"clap","拍手","動詞"] , [321,"class leader","班長","名詞"] , [322,"classical","古典的","形容詞"] , [323,"classmate","同學","名詞"] , [324,"classroom","教室","名詞"] , [325,"clean","清潔","動詞"] , [326,"clear","晴朗的","形容詞"] , [327,"clerk","店員;職員","名詞"] , [328,"climate","氣候","名詞"] , [329,"climb","攀爬","動詞"] , [330,"clock","時鐘","名詞"] , [331,"close","關閉","動詞"] , [332,"closet","衣櫥","名詞"] , [333,"clothes","衣服(總稱)","名詞"] , [334,"cloud","雲","名詞"] , [335,"cloudy","多雲的","形容詞"] , [336,"club","俱樂部","名詞"] , [337,"coach","教練","名詞"] , [338,"coast","海岸","名詞"] , [339,"coat","外套","名詞"] , [340,"cockroach","蟑螂","名詞"] , [341,"coffee","咖啡","名詞"] , [342,"coin","硬幣","名詞"] , [343,"cola","可樂","名詞"] , [344,"cold","感冒","名詞"] , [345,"cold","寒冷的","形容詞"] , [346,"collect","收集","動詞"] , [347,"color","顏色","名詞"] , [348,"colorful","多彩的","形容詞"] , [349,"comb","梳子","名詞"] , [350,"come","來","動詞"] , [351,"comfortable","舒服的","形容詞"] , [352,"comic","漫畫","名詞"] , [353,"command","命令","名詞"] , [354,"comment","評論","動詞"] , [355,"common","普通的;常見的","形容詞"] , [356,"company","公司","名詞"] , [357,"compare","比較","動詞"] , [358,"complain","抱怨","動詞"] , [359,"complete","完成","動詞"] , [360,"complete","完整的","形容詞"] , [361,"computer","電腦","名詞"] , [362,"computer game","電腦遊戲","名詞"] , [363,"concern","關心:涉及","動詞"] , [364,"confident","有自信的","形容詞"] , [365,"confuse","混淆","動詞"] , [366,"congratulation","祝賀","名詞"] , [367,"consider","考慮","動詞"] , [368,"considerate","體貼的","形容詞"] , [369,"contact lens","隱形眼鏡","名詞"] , [370,"continue","繼續","動詞"] , [371,"contract","合約","名詞"] , [372,"control","控制","動詞"] , [373,"convenience store","便利商店","名詞"] , [374,"convenient","方便的","形容詞"] , [375,"conversation","對話","名詞"] , [376,"cook","烹調","動詞"] , [377,"cook","廚師","名詞"] , [378,"cookie","餅乾","名詞"] , [379,"cool","酷的","形容詞"] , [380,"cool","涼爽的","形容詞"] , [381,"copy","複製","動詞"] , [382,"corn","玉米","名詞"] , [383,"corner","角落","名詞"] , [384,"correct","改正","動詞"] , [385,"correct","正確的","形容詞"] , [386,"cost","花費","動詞"] , [387,"cotton","棉","名詞"] , [388,"couch","長沙發","名詞"] , [389,"cough","咳嗽","名詞"] , [390,"count","數數","動詞"] , [391,"country","國家:鄉下","名詞"] , [392,"couple","情侶;夫妻","名詞"] , [393,"courage","勇氣","名詞"] , [394,"course","課程","名詞"] , [395,"court","法庭:球場","名詞"] , [396,"cousin","堂(表)兄弟姊妹","名詞"] , [397,"cover","覆蓋","動詞"] , [398,"cow","牛","名詞"] , [399,"crab","螃蟹","名詞"] , [400,"crayon","蠟筆","名詞"],[401,"crazy","瘋狂的","形容詞"],[402,"cream","鮮奶油","名詞"],[403,"create","創造","動詞"],[404,"credit card","信用卡","名詞"],[405,"crime","犯罪","名詞"],[406,"cross","穿越","動詞"],[407,"crowd","人群","名詞"],[408,"crowded","擁擁擠的","形容詞"],[409,"cruel","殘忍的","形容詞"],[410,"cry","哭","動詞"],[411,"culture","文化","名詞"],[412,"culture center","文化中心","名詞"],[413,"cup","杯子","名詞"],[414,"cup","杯","名詞"],[415,"cure","治癒","動詞"],[416,"curious","好奇的","形容詞"],[417,"current","當前的","形容詞"],[418,"curtain","窗簾","名詞"],[419,"curve","曲線","名詞"],[420,"custom","習俗","名詞"],[421,"customer","顧客","名詞"],[422,"cut","切割","動詞"],[423,"cute","可愛的","形容詞"],[424,"daily","每日的","形容詞"],[425,"damage","損害","名詞"],[426,"dance","跳舞","動詞"],[427,"danger","危險","名詞"],[428,"dangerous","危險的","形容詞"],[429,"dark","黑暗的","形容詞"],[430,"date","約會","動詞"],[431,"daughter","女兒","名詞"],[432,"dawn","黎明","名詞"],[433,"dead","死的","形容詞"],[434,"deaf","失聰的","形容詞"],[435,"deal","處理","動詞"],[436,"dear","親愛的;昂貴的","形容詞"],[437,"death","死亡","名詞"],[438,"debate","辯論","名詞"],[439,"December","十二月","名詞"],[440,"decide","決定","動詞"],[441,"decision","決定","名詞"],[442,"decorate","裝飾","動詞"],[443,"decrease","減少","動詞"],[444,"deep","深的","形容詞"],[445,"deer","鹿","名詞"],[446,"define","定義","動詞"],[447,"degree","度數","名詞"],[448,"delicious","美味的","形容詞"],[449,"deliver","遞送","動詞"],[450,"dentist","牙醫","名詞"],[451,"department","部門;系","名詞"],[452,"department store","百貨公司","名詞"],[453,"depend","依賴","動詞"],[454,"describe","描述","動詞"],[455,"desert","沙漠","名詞"],[456,"design","設計","動詞"],[457,"desire","慾望","名詞"],[458,"desk","書桌","名詞"],[459,"dessert","甜點","名詞"],[460,"detect","偵測","動詞"],[461,"develop","發展","動詞"],[462,"dial","撥號","動詞"],[463,"diamond","鑽石","名詞"],[464,"diary","日記","名詞"],[465,"dictionary","字典","名詞"],[466,"die","死亡","動詞"],[467,"diet","飲食;節食","名詞"],[468,"difference","差異","名詞"],[469,"different","不同的","形容詞"],[470,"difficult","困難的","形容詞"],[471,"difficulty","困難","名詞"],[472,"dig","挖掘","動詞"],[473,"diligent","勤奮的","形容詞"],[474,"dining room","餐廳","名詞"],[475,"dinner","晚餐","名詞"],[476,"dinosaur","恐龍","名詞"],[477,"diplomat","外交官","名詞"],[478,"direct","指導","動詞"],[479,"direction","方向","名詞"],[480,"dirty","骯髒的","形容詞"],[481,"disappear","消失","動詞"],[482,"discover","發現","動詞"],[483,"discuss","討論","動詞"],[484,"discussion","討論","名詞"],[485,"dish","盤子","名詞"],[486,"dishonest","不誠實的","形容詞"],[487,"distance","距離","名詞"],[488,"distant","遙遠的","形容詞"],[489,"divide","分割","動詞"],[490,"dizzy","頭暈的","形容詞"],[491,"doctor","醫生","名詞"],[492,"dodge ball","躲避球","名詞"],[493,"dog","狗","名詞"],[494,"doll","洋娃娃","名詞"],[495,"dollar","元(貨幣單位)","名詞"],[496,"dolphin","海豚","名詞"],[497,"donkey","驢","名詞"],[498,"door","門","名詞"],[499,"dot","點","名詞"],[500,"double","雙倍的","形容詞"],[501,"Double Tenth Day","雙十節","名詞"],[502,"doubt","懷疑","動詞"],[503,"doughnut","甜甜圈","名詞"],[504,"down","沿…而下","介系詞"],[505,"download","下載","動詞"],[506,"downstairs","樓下","名詞"],[507,"downtown","市中心","名詞"],[508,"dozen","一打(十二個)","名詞"],[509,"dragon","龍","名詞"],[510,"Dragon-boat Festival","端午節","名詞"],[511,"drama","戲劇","名詞"],[512,"draw","畫畫","動詞"],[513,"draw","畫畫","動詞"],[514,"drawer","抽屜","名詞"],[515,"dream","夢想","名詞"],[516,"dress","連身裙","名詞"],[517,"dresser","梳妝台","名詞"],[518,"drink","喝","動詞"],[519,"drive","開車","動詞"],[520,"driver","司機","名詞"],[521,"drop","掉落","動詞"],[522,"drugstore","藥局","名詞"],[523,"drum","鼓","名詞"],[524,"dry","乾燥的","形容詞"],[525,"dryer","烘乾機","名詞"],[526,"duck","鴨","名詞"],[527,"dumb","啞的","形容詞"],[528,"dumpling","餃子","名詞"],[529,"during","在…期間","介系詞"],[530,"duty","責任","名詞"],[531,"each","每個","代名詞"],[532,"eagle","老鷹","名詞"],[533,"ear","耳朵","名詞"],[534,"early","早的","形容詞"],[535,"earn","賺取","動詞"],[536,"earrings","耳環","名詞"],[537,"earth","地球","名詞"],[538,"earthquake","地震","名詞"],[539,"ease","緩和","動詞"],[540,"east","東方的","形容詞"],[541,"Easter","復活節","名詞"],[542,"easy","容易的","形容詞"],[543,"eat","吃","動詞"],[544,"edge","邊緣","名詞"],[545,"education","教育","名詞"],[546,"effort","努力","名詞"],[547,"egg","蛋","名詞"],[548,"eight","八","名詞"],[549,"eighteen","十八","名詞"],[550,"eighty","八十","名詞"],[551,"either","也(用於否定句)","副詞/連接詞"],[552,"elder","長輩","名詞"],[553,"elect","選舉","動詞"],[554,"electric","電的","形容詞"],[555,"elementary school","小學","名詞"],[556,"elephant","大象","名詞"],[557,"eleven","十一","名詞"],[558,"e-mail","電子郵件","名詞"],[559,"embarrass","使尷尬","動詞"],[560,"emotion","情緒","名詞"],[561,"emphasize","強調","動詞"],[562,"employ","雇用","動詞"],[563,"end","結束","動詞"],[564,"enemy","敵人","名詞"],[565,"energetic","精力充沛的","形容詞"],[566,"energy","能量","名詞"],[567,"engine","引擎","名詞"],[568,"engineer","工程師","名詞"],[569,"English","英文","名詞"],[570,"enjoy","享受","動詞"],[571,"enough","足夠的","形容詞"],[572,"enter","進入","動詞"],[573,"entrance","入口","名詞"],[574,"envelope","信封","名詞"],[575,"environment","環境","名詞"],[576,"envy","嫉妒","動詞"],[577,"equal","平等的","形容詞"],[578,"eraser","橡皮擦","名詞"],[579,"error","錯誤","名詞"],[580,"especially","尤其","副詞"],[581,"eve","前夕","名詞"],[582,"even","甚至","副詞"],[583,"evening","傍晚","名詞"],[584,"event","事件","名詞"],[585,"ever","曾經","副詞"],[586,"everyone","每個人","代名詞"],[587,"everything","每件事","代名詞"],[588,"everywhere","到處","副詞"],[589,"evil","邪惡的","形容詞"],[590,"exam","考試","名詞"],[591,"example","例子","名詞"],[592,"excellent","優秀的","形容詞"],[593,"except","除了……之外","介系詞"],[594,"excite","使興奮","動詞"],[595,"excited","感到興奮的","形容詞"],[596,"exciting","令人興奮的","形容詞"],[597,"excuse","藉口","名詞"],[598,"exercise","運動","動詞"],[599,"exercise","練習","名詞"],[600,"exist","動詞","存在"],[601,"exit","出口","名詞"],[602,"expect","預期","動詞"],[603,"expensive","昂貴的","形容詞"],[604,"experience","經驗","名詞"],[605,"explain","解釋","動詞"],[606,"explain","解釋","動詞"],[607,"express","表達","動詞"],[608,"extra","額外的","形容詞"],[609,"eye","眼睛","名詞"],[610,"face","臉","名詞"],[611,"fact","事實","名詞"],[612,"factory","工廠","名詞"],[613,"fair","公平的","形容詞"],[614,"fall","掉落","動詞"],[615,"family","家庭","名詞"],[616,"famous","著名的","形容詞"],[617,"fan","粉絲;愛好者","名詞"],[618,"fan","電風扇","名詞"],[619,"fantastic","極好的","形容詞"],[620,"far","遠的","形容詞"],[621,"farm","農場","名詞"],[622,"farmer","農夫","名詞"],[623,"fashionable","時尚的","形容詞"],[624,"fast","快的","形容詞"],[625,"fast food","速食","名詞"],[626,"fast food restaurant","速食餐廳","名詞"],[627,"fat","胖的","形容詞"],[628,"father","父親","名詞"],[629,"Father's Day","父親節","名詞"],[630,"faucet","水龍頭","名詞"],[631,"fault","過錯","名詞"],[632,"favorite","最喜愛的","形容詞"],[633,"fear","恐懼","名詞"],[634,"February","二月","名詞"],[635,"fee","費用","名詞"],[636,"feed","餵食","動詞"],[637,"feel","感覺","動詞"],[638,"feeling","感覺","名詞"],[639,"fence","柵欄","名詞"],[640,"festival","節慶","名詞"],[641,"fever","發燒","名詞"],[642,"few","很少(用於可數)","限定詞"],[643,"fifteen","十五","名詞"],[644,"fifty","五十","名詞"],[645,"fight","打架","動詞"],[646,"file","檔案","名詞"],[647,"fill","填滿","動詞"],[648,"film","電影","名詞"],[649,"final","最終的","形容詞"],[650,"finally","最後","副詞"],[651,"find","找到","動詞"],[652,"finger","手指","名詞"],[653,"finish","完成","動詞"],[654,"fire","火","名詞"],[655,"fire station","消防局","名詞"],[656,"first","第一","名詞"],[657,"fish","魚","名詞"],[658,"fish","魚","動詞"],[659,"fish","魚","名詞"],[660,"fisherman","漁夫","名詞"],[661,"fit","適合","動詞"],[662,"five","五","名詞"],[663,"fix","修理","動詞"],[664,"flag","旗幟","名詞"],[665,"flashlight","手電筒","名詞"],[666,"flat tire","爆胎","名詞"],[667,"flight","飛行;航班","名詞"],[668,"floor","地板;樓層","名詞"],[669,"flour","麵粉","名詞"],[670,"flower","花","名詞"],[671,"flower shop","花店","名詞"],[672,"flu","流行性感冒","名詞"],[673,"flute","長笛","名詞"],[674,"fly","飛行","動詞"],[675,"focus","聚焦","動詞"],[676,"fog","霧","名詞"],[677,"foggy","有霧的","形容詞"],[678,"follow","跟隨","動詞"],[679,"food","食物","名詞"],[680,"fool","傻瓜","名詞"],[681,"foolish","愚蠢的","形容詞"],[682,"foot","腳","名詞"],[683,"foot","英尺","名詞"],[684,"football","美式足球","名詞"],[685,"for","為了;給;因為","介系詞"],[686,"foreign","外國的","形容詞"],[687,"foreigner","外國人","名詞"],[688,"forest","森林","名詞"],[689,"forget","忘記","動詞"],[690,"forgive","原諒","動詞"],[691,"fork","叉子","名詞"],[692,"form","形成","動詞"],[693,"formal","正式的","形容詞"],[694,"former","前任的;以前的","形容詞"],[695,"forty","四十","名詞"],[696,"forward","向前","副詞"],[697,"four","四","名詞"],[698,"fourteen","十四","名詞"],[699,"fox","狐狸","名詞"],[700,"frank","坦率的","形容詞"],[701,"free","免費的;自由的","形容詞"],[702,"freedom","自由","名詞"],[703,"freezer","冷凍庫","名詞"],[704,"freezing","極冷的","形容詞"],[705,"fresh","新鮮的","形容詞"],[706,"Friday","星期五","名詞"],[707,"friend","朋友","名詞"],[708,"friendly","友善的","形容詞"],[709,"friendship","友誼","名詞"],[710,"fries","薯條","名詞"],[711,"frighten","使害怕","動詞"],[712,"frisbee","飛盤","名詞"],[713,"frog","青蛙","名詞"],[714,"from","從……來自………","介系詞"],[715,"front","前面的","形容詞"],[716,"fruit","水果","名詞"],[717,"fry","油炸","動詞"],[718,"full","飽的","形容詞"],[719,"fun","樂趣","名詞"],[720,"funny","有趣的","形容詞"],[721,"furniture","家具","名詞"],[722,"future","未來","名詞"],[723,"game","遊戲","名詞"],[724,"garage","車庫","名詞"],[725,"garbage","垃圾","名詞"],[726,"garden","花園","名詞"],[727,"gas","瓦斯;汽油","名詞"],[728,"gate","大門","名詞"],[729,"gather","聚集","動詞"],[730,"generous","慷慨的","形容詞"],[731,"genius","天才","名詞"],[732,"gentle","溫和的","形容詞"],[733,"gentleman","紳士","名詞"],[734,"geography","地理","名詞"],[735,"gesture","手勢","名詞"],[736,"get","得到","動詞"],[737,"ghost","鬼魂","名詞"],[738,"giant","巨人","名詞"],[739,"gift","禮物","名詞"],[740,"girl","女孩","名詞"],[741,"give","給予","動詞"],[742,"glad","高興的","形容詞"],[743,"glass","玻璃杯","名詞"],[744,"glass","玻璃杯","名詞"],[745,"glasses","眼鏡","名詞"],[746,"glove","手套","名詞"],[747,"glue","膠水","名詞"],[748,"go","去","動詞"],[749,"goal","目標","名詞"],[750,"goat","山羊","名詞"],[751,"gold","黃金","名詞"],[752,"golf","高爾夫球","名詞"],[753,"goose","鵝","名詞"],[754,"government","政府","名詞"],[755,"grade","年級;成績","名詞"],[756,"gram","公克","名詞"],[757,"granddaughter","孫女","名詞"],[758,"grandfather","祖父","名詞"],[759,"grandmother","祖母","名詞"],[760,"grandson","孫子","名詞"],[761,"grape","葡萄","名詞"],[762,"grass","草","名詞"],[763,"gray","灰色","名詞"],[764,"greedy","貪心的","形容詞"],[765,"green","綠色","名詞"],[766,"greet","問候","動詞"],[767,"ground","地面","名詞"],[768,"group","群組","名詞"],[769,"grow","成長;生長","動詞"],[770,"grow","成長","動詞"],[771,"guard","警衛","名詞"],[772,"guava","番石榴","名詞"],[773,"guess","猜測","動詞"],[774,"guest","客人","名詞"],[775,"guide","導遊","名詞"],[776,"guide","引導","動詞"],[777,"guitar","吉他","名詞"],[778,"gun","槍","名詞"],[779,"gym","體育館","名詞"],[780,"habit","習慣","名詞"],[781,"hair","頭髮","名詞"],[782,"hair dresser","髮型師","名詞"],[783,"haircut","理髮","名詞"],[784,"half","一半","名詞"],[785,"hall","走廊;大廳","名詞"],[786,"Halloween","萬聖節","名詞"],[787,"ham","火腿","名詞"],[788,"hamburger","漢堡","名詞"],[789,"hammer","鐵鎚","名詞"],[790,"hand","手","名詞"],[791,"handkerchief","手帕","名詞"],[792,"handle","處理","動詞"],[793,"handsome","英俊的","形容詞"],[794,"hang","懸掛","動詞"],[795,"hanger","衣架","名詞"],[796,"happen","發生","動詞"],[797,"happy","快樂的","形容詞"],[798,"hard","硬的;困難的","形容詞"],[799,"hardly","幾乎不","副詞"],[800,"hard-working","努力工作的","形容詞"],[801,"hate","討厭","動詞"],[802,"he","他","代名詞 (主格)"],[803,"head","頭","名詞"],[804,"headache","頭痛","名詞"],[805,"health","健康","名詞"],[806,"healthy","健康的","形容詞"],[807,"hear","聽見","動詞"],[808,"heart","心臟","名詞"],[809,"heat","熱","名詞"],[810,"heater","暖氣","名詞"],[811,"heavy","重的","形容詞"],[812,"height","高度","名詞"],[813,"helicopter","直升機","名詞"],[814,"help","幫助","動詞"],[815,"helpful","有幫助的","形容詞"],[816,"hen","母雞","名詞"],[817,"her","她的","所有格"],[818,"her","她的","代名詞 (受格)"],[819,"hero","英雄","名詞"],[820,"hers","她的","代名詞"],[821,"herself","她自己","代名詞"],[822,"hide","隱藏","動詞"],[823,"high","高的","形容詞"],[824,"highway","高速公路","名詞"],[825,"hike","健行/遠足","動詞"],[826,"hill","山丘","名詞"],[827,"him","他","代名詞 (受格)"],[828,"himself","他自己","代名詞"],[829,"hip","臀部","名詞"],[830,"hippo","河馬","名詞"],[831,"hire","雇用","動詞"],[832,"his","他的","所有格"],[833,"his","他的","代名詞"],[834,"history","歷史","名詞"],[835,"hit","擊打","動詞"],[836,"hobby","嗜好","名詞"],[837,"hold","握住","動詞"],[838,"hole","破洞","名詞"],[839,"holiday","假日","名詞"],[840,"home","家","名詞"],[841,"homesick","想家的","形容詞"],[842,"homework","家庭作業","名詞"],[843,"honest","誠實的","形容詞"],[844,"honesty","誠實","名詞"],[845,"honey","蜂蜜;親愛的","名詞"],[846,"hop","單腳跳","動詞"],[847,"hope","希望","動詞"],[848,"horrible","可怕的","形容詞"],[849,"horse","馬","名詞"],[850,"hospital","醫院","名詞"],[851,"host","主人","名詞"],[852,"hot","辣的;熱的","形容詞"],[853,"hot","炎熱的","形容詞"],[854,"hot dog","熱狗","名詞"],[855,"hotel","飯店","名詞"],[856,"hour","小時","名詞"],[857,"house","房子","名詞"],[858,"housewife","家庭主婦","名詞"],[859,"housework","家事","名詞"],[860,"how","如何","疑問詞"],[861,"however","然而","副詞"],[862,"hug","擁抱","動詞"],[863,"human","人類","名詞"],[864,"humble","謙虛的","形容詞"],[865,"humid","潮濕的","形容詞"],[866,"humor","幽默","名詞"],[867,"humorous","幽默的","形容詞"],[868,"hundred","百","名詞"],[869,"hunger","飢餓","名詞"],[870,"hungry","餓的","形容詞"],[871,"hunt","狩獵","動詞"],[872,"hunter","獵人","名詞"],[873,"hurry","匆忙","動詞"],[874,"hurt","傷害","動詞"],[875,"husband","丈夫","名詞"],[876,"I","我","代名詞 (主格)"],[877,"ice","冰","名詞"],[878,"ice cream","冰淇淋","名詞"],[879,"idea","主意","名詞"],[880,"if","如果","連接詞"],[881,"ignore","忽略","動詞"],[882,"imagine","想像","動詞"],[883,"impolite","不禮貌的","形容詞"],[884,"importance","重要性","名詞"],[885,"important","重要的","形容詞"],[886,"impossible","不可能的","形容詞"],[887,"improve","改善","動詞"],[888,"in","在…裡面(較大範圍)","介系詞"],[889,"in back of","在…後面","介系詞"],[890,"in front of","在…前面","介系詞"],[891,"inch","英吋","名詞"],[892,"include","包含","動詞"],[893,"income","收入","名詞"],[894,"increase","增加","動詞"],[895,"independent","獨立的","形容詞"],[896,"influence","影響","名詞"],[897,"information","資訊","名詞"],[898,"ink","墨水","名詞"],[899,"insect","昆蟲","名詞"],[900,"inside","在…裡面","介系詞"],[901,"insist","堅持","動詞"],[902,"inspire","激勵","動詞"],[903,"instant","立即的","形容詞"],[904,"instant noodle","泡麵","名詞"],[905,"instrument","樂器","名詞"],[906,"intelligent","有智慧的","形容詞"],[907,"interest","興趣","名詞"],[908,"interested","感興趣的","形容詞"],[909,"interesting","有趣的","形容詞"],[910,"international","國際的","形容詞"],[911,"Internet","網際網路","名詞"],[912,"interrupt","打斷","動詞"],[913,"interview","面試;訪談","名詞"],[914,"into","進入","介系詞"],[915,"introduce","介紹","動詞"],[916,"invent","發明","動詞"],[917,"invitation","邀請","名詞"],[918,"invite","邀請","動詞"],[919,"iron","熨燙","動詞"],[920,"island","島嶼","名詞"],[921,"it","它","代名詞 (主/受格)"],[922,"item","項目","名詞"],[923,"its","它的","所有格"],[924,"its","它的","所有格"],[925,"itself","它自己","代名詞"],[926,"jacket","夾克","名詞"],[927,"jam","果醬","名詞"],[928,"January","一月","名詞"],[929,"Japanese","日本人","名詞"],[930,"jealous","嫉妒的","形容詞"],[931,"jeans","牛仔褲","名詞"],[932,"jeep","吉普車","名詞"],[933,"jog","慢跑","動詞"],[934,"join","加入","動詞"],[935,"joke","笑話","名詞"],[936,"journalist","記者","名詞"],[937,"joy","歡樂","名詞"],[938,"judge","法官","名詞"],[939,"judge","判斷","動詞"],[940,"juice","果汁","名詞"],[941,"July","七月","名詞"],[942,"jump","跳躍","動詞"],[943,"June","六月","名詞"],[944,"junior high school","初中","名詞"],[945,"kangaroo","袋鼠","名詞"],[946,"keep","保持","動詞"],[947,"ketchup","番茄醬","名詞"],[948,"key","鑰匙","名詞"],[949,"kick","踢","動詞"],[950,"kid","小孩","名詞"],[951,"kill","殺死","動詞"],[952,"kilogram","公斤","名詞"],[953,"kilometer","公里","名詞"],[954,"kind","仁慈的;親切的","形容詞"],[955,"kind","種類","名詞"],[956,"kindergarten","幼兒園","名詞"],[957,"king","國王","名詞"],[958,"kingdom","王國","名詞"],[959,"kiss","親吻","動詞"],[960,"kitchen","廚房","名詞"],[961,"kitten","小貓","名詞"],[962,"knee","膝蓋","名詞"],[963,"knife","刀子","名詞"],[964,"knock","敲","動詞"],[965,"know","知道","動詞"],[966,"knowledge","知識","名詞"],[967,"koala","無尾熊","名詞"],[968,"Korean","韓國人","名詞"],[969,"lack","缺乏","名詞"],[970,"lady","女士","名詞"],[971,"lake","湖泊","名詞"],[972,"lamb","小羊","名詞"],[973,"lamp","燈","名詞"],[974,"land","降落","動詞"],[975,"language","語言","名詞"],[976,"lantern","燈籠","名詞"],[977,"Lantern Festival","元宵節","名詞"],[978,"large","大的","形容詞"],[979,"last","最後的","形容詞"],[980,"last","上一個的;最後的","形容詞"],[981,"late","晚的","形容詞"],[982,"later","稍後","副詞"],[983,"latest","最新的","形容詞"],[984,"laugh","大笑","動詞"],[985,"law","法律","名詞"],[986,"lawyer","律師","名詞"],[987,"lay","放置(產卵)","動詞"],[988,"lazy","懶惰的","形容詞"],[989,"lead","領導","動詞"],[990,"leader","領袖","名詞"],[991,"leaf","葉子","名詞"],[992,"learn","學習","動詞"],[993,"least","最少","副詞"],[994,"leave","離開","動詞"],[995,"left","左邊的","形容詞"],[996,"leg","腿","名詞"],[997,"lemon","檸檬","名詞"],[998,"lend","借出","動詞"],[999,"less","更少(用於不可數)","限定詞"],[1000,"lesson","課","名詞"],[1001,"let","讓","動詞"],[1002,"letter","信件;字母","名詞"],[1003,"lettuce","生菜","名詞"],[1004,"level","水平","名詞"],[1005,"library","圖書館","名詞"],[1006,"lick","舔","動詞"],[1007,"lid","蓋子","名詞"],[1008,"lie","說謊;躺","動詞"],[1009,"life","生命","名詞"],[1010,"lift","舉起","動詞"],[1011,"light","燈;光","名詞"],[1012,"light","輕的","形容詞"],[1013,"lightning","閃電","名詞"],[1014,"like","像…","介系詞"],[1015,"like","喜歡","動詞"],[1016,"limit","限制","動詞"],[1017,"line","線","名詞"],[1018,"link","連結","名詞"],[1019,"lion","獅子","名詞"],[1020,"lip","嘴唇","名詞"],[1021,"liquid","液體","名詞"],[1022,"list","列出","動詞"],[1023,"list","列出","動詞"],[1024,"listen","聆聽","動詞"],[1025,"listen","聆聽","動詞"],[1026,"liter","公升","名詞"],[1027,"little","很少(用於不可數)","限定詞"],[1028,"little","小的","形容詞"],[1029,"live","居住;生活","動詞"],[1030,"living room","客廳","名詞"],[1031,"loaf","條(麵包)","名詞"],[1032,"local","當地的","形容詞"],[1033,"lock","鎖上","動詞"],[1034,"locker","鎖櫃","名詞"],[1035,"lonely","孤獨的","形容詞"],[1036,"long","長的","形容詞"],[1037,"look","看","動詞"],[1038,"lose","輸掉;失去","動詞"],[1039,"loser","輸家","名詞"],[1040,"loud","大聲的","形容詞"],[1041,"love","愛","動詞"],[1042,"lovely","可愛的","形容詞"],[1043,"low","低的","形容詞"],[1044,"lucky","幸運的","形容詞"],[1045,"lunch","午餐","名詞"],[1046,"machine","機器","名詞"],[1047,"mad","瘋狂的","形容詞"],[1048,"magazine","雜誌","名詞"],[1049,"magic","魔法的","形容詞"],[1050,"magician","魔術師","名詞"],[1051,"mail","郵件","名詞"],[1052,"mailman","郵差","名詞"],[1053,"major","主要的","形容詞"],[1054,"make","製作","動詞"],[1055,"mall","購物中心","名詞"],[1056,"man","男人","名詞"],[1057,"manager","經理","名詞"],[1058,"mango","芒果","名詞"],[1059,"manner","禮貌;方式","名詞"],[1060,"many","許多(可數)","代名詞"],[1061,"map","地圖","名詞"],[1062,"March","三月","名詞"],[1063,"mark","批改","動詞"],[1064,"marker","麥克筆","名詞"],[1065,"market","市場","名詞"],[1066,"married","已婚的","形容詞"],[1067,"marry","結婚","動詞"],[1068,"marvelous","不可思議的;極好的","形容詞"],[1069,"mask","口罩:面具","名詞"],[1070,"mass","團:大量","名詞"],[1071,"master","主人;大師","名詞"],[1072,"mat","地墊","名詞"],[1073,"match","匹配","動詞"],[1074,"math","數學","名詞"],[1075,"matter","事情","名詞"],[1076,"maximum","最大的","形容詞"],[1077,"May","五月","名詞"],[1078,"me","我","代名詞 (受格)"],[1079,"meal","一餐","名詞"],[1080,"mean","意思是","動詞"],[1081,"measure","測量","動詞"],[1082,"meat","肉","名詞"],[1083,"mechanic","技工","名詞"],[1084,"medicine","藥物;醫學","名詞"],[1085,"medium","中等的","形容詞"],[1086,"meet","遇見","動詞"],[1087,"meeting","會議","名詞"],[1088,"member","成員","名詞"],[1089,"memory","記憶:回憶","名詞"],[1090,"memory","記憶","名詞"],[1091,"men's room","男廁","名詞"],[1092,"menu","菜單","名詞"],[1093,"message","訊息","名詞"],[1094,"metal","金屬","名詞"],[1095,"meter","公尺","名詞"],[1096,"method","方法","名詞"],[1097,"metro","地鐵","名詞"],[1098,"middle","中間的","形容詞"],[1099,"midnight","午夜","名詞"],[1100,"mile","英里","名詞"],[1101,"milk","牛奶","名詞"],[1102,"milk shake","奶昔","名詞"],[1103,"million","百萬","名詞"],[1104,"mind","心智","名詞"],[1105,"mind","介意","動詞"],[1106,"mine","我的","代名詞"],[1107,"minor","次要的;較小的","形容詞"],[1108,"minus","負號","名詞"],[1109,"minute","分鐘","名詞"],[1110,"mirror","鏡子","名詞"],[1111,"miss","想念;未擊中","動詞"],[1112,"mistake","錯誤","名詞"],[1113,"mix","混合","動詞"],[1114,"model","模特兒","名詞"],[1115,"modern","現代的","形容詞"],[1116,"moment","片刻","名詞"],[1117,"Monday","星期一","名詞"],[1118,"money","錢","名詞"],[1119,"monkey","猴子","名詞"],[1120,"monster","怪物","名詞"],[1121,"month","月","名詞"],[1122,"moon","月亮","名詞"],[1123,"moon cake","月餅","名詞"],[1124,"Moon Festival","中秋節","名詞"],[1125,"mop","用拖把拖地","動詞"],[1126,"morning","早晨","名詞"],[1127,"mosquito","蚊子","名詞"],[1128,"mother","母親","名詞"],[1129,"Mother's Day","母親節","名詞"],[1130,"motion","動作","名詞"],[1131,"motorcycle","摩托車","名詞"],[1132,"mountain","山","名詞"],[1133,"mouse","老鼠","名詞"],[1134,"mouth","嘴巴","名詞"],[1135,"move","移動","動詞"],[1136,"movement","運動","名詞"],[1137,"movie","電影","名詞"],[1138,"movie theater","電影院","名詞"],[1139,"mud","泥巴","名詞"],[1140,"museum","博物館","名詞"],[1141,"MRT","捷運","名詞"],[1142,"music","音樂","名詞"],[1143,"musician","音樂家","名詞"],[1144,"most","大部分","代名詞"],[1145,"my","我的","所有格"],[1146,"myself","我自己","代名詞"],[1147,"nail","指甲","名詞"],[1148,"napkin","餐巾","名詞"],[1149,"narrow","窄的","形容詞"],[1150,"national","國家的","形容詞"],[1151,"natural","自然的","形容詞"],[1152,"nature","大自然","名詞"],[1153,"naughty","頑皮的","形容詞"],[1154,"near","靠近","介系詞"],[1155,"necessary","必要的","形容詞"],[1156,"neck","脖子","名詞"],[1157,"necklace","項鍊","名詞"],[1158,"need","需要","動詞"],[1159,"needle","針","名詞"],[1160,"negative","負面的","形容詞"],[1161,"neighbor","鄰居","名詞"],[1162,"nephew","侄子;外甥","名詞"],[1163,"nervous","緊張的","形容詞"],[1164,"nest","鳥巢","名詞"],[1165,"net","網","名詞"],[1166,"never","從不","副詞"],[1167,"New Year's Day","元旦","名詞"],[1168,"New Year's Eve","除夕","名詞"],[1169,"news","新聞","名詞"],[1170,"newspaper","報紙","名詞"],[1171,"next","下一個的","形容詞"],[1172,"next to","緊鄰;在…旁邊","介系詞"],[1173,"nice-looking","好看的","形容詞"],[1174,"niece","姪女;外甥女","名詞"],[1175,"night","夜晚","名詞"],[1176,"nine","九","名詞"],[1177,"nineteen","十九","名詞"],[1178,"ninety","九十","名詞"],[1179,"nobody","沒有人","代名詞"],[1180,"nod","點頭","動詞"],[1181,"noise","噪音","名詞"],[1182,"noisy","吵鬧的","形容詞"],[1183,"noodle","麵條","名詞"],[1184,"noon","中午","名詞"],[1185,"nor","也不","連接詞"],[1186,"north","北方的","形容詞"],[1187,"nose","鼻子","名詞"],[1188,"note","筆記;音符","名詞"],[1189,"notebook","筆記本","名詞"],[1190,"nothing","沒有東西","代名詞"],[1191,"notice","注意到","動詞"],[1192,"notice","注意到","動詞"],[1193,"novel","小說","名詞"],[1194,"November","十一月","名詞"],[1195,"now","現在","副詞"],[1196,"number","數字;數量","名詞"],[1197,"nurse","護士","名詞"],[1198,"nut","堅果","名詞"],[1199,"o' clock","…點鐘","副詞"],[1200,"obey","服從","動詞"],[1201,"ocean","海洋","名詞"],[1202,"October","十月","名詞"],[1203,"of","……的;關於","介系詞"],[1204,"off","離開;從…下來","介系詞"],[1205,"offer","提供","動詞"],[1206,"office","辦公室","名詞"],[1207,"often","經常","副詞"],[1208,"oil","油","名詞"],[1209,"old","年老的","形容詞"],[1210,"omit","省略","動詞"],[1211,"on","在…上面(接觸)","介系詞"],[1212,"once","曾經;一次","副詞"],[1213,"one","一","名詞"],[1214,"onion","洋蔥","名詞"],[1215,"open","打開","動詞"],[1216,"operation","操作;手術","名詞"],[1217,"opinion","意見","名詞"],[1218,"or","或者","連接詞"],[1219,"orange","柳橙","名詞"],[1220,"orange","橙色","名詞"],[1221,"order","點餐","動詞"],[1222,"order","命令;訂單","名詞"],[1223,"ordinary","普通的","形容詞"],[1224,"our","我們的","所有格"],[1225,"our","我們的","所有格"],[1226,"ours","我們的","代名詞"],[1227,"ourselves","我們自己","代名詞"],[1228,"out of","從…裡面出來","介系詞"],[1229,"outside","在…外面","介系詞"],[1230,"oven","烤箱","名詞"],[1231,"over","在…正上方;越過","介系詞"],[1232,"overpass","天橋;陸橋","名詞"],[1233,"overseas","海外的","形容詞"],[1234,"over-weight","過重的","形容詞"],[1235,"own","擁有","動詞"],[1236,"OX","公牛","名詞"],[1237,"pack","包","名詞"],[1238,"pack","打包","動詞"],[1239,"package","包裹","名詞"],[1240,"page","頁","名詞"],[1241,"pain","疼痛","名詞"],[1242,"painful","疼痛的","形容詞"],[1243,"paint","繪畫","動詞"],[1244,"painter","畫家","名詞"],[1245,"pair","一雙:一對","名詞"],[1246,"pajamas","睡衣","名詞"],[1247,"pale","蒼白的","形容詞"],[1248,"pan","平底鍋","名詞"],[1249,"panda","熊貓","名詞"],[1250,"pants","褲子","名詞"],[1251,"papaya","木瓜","名詞"],[1252,"paper","紙","名詞"],[1253,"parent","父母","名詞"],[1254,"park","公園","名詞"],[1255,"park","停車","動詞"],[1256,"parking lot","停車場","名詞"],[1257,"parrot","鸚鵡","名詞"],[1258,"part","部分","名詞"],[1259,"partner","夥伴;伴侶","名詞"],[1260,"party","派對:政黨","名詞"],[1261,"pass","通過","動詞"],[1262,"passenger","乘客","名詞"],[1263,"past","過(用於時間)","介系詞"],[1264,"paste","貼上","動詞"],[1265,"path","小徑","名詞"],[1266,"patient","有耐心的","形容詞"],[1267,"pattern","模式","名詞"],[1268,"pause","暫停","動詞"],[1269,"pay","支付","動詞"],[1270,"peace","和平","名詞"],[1271,"peaceful","和平的","形容詞"],[1272,"peach","桃子","名詞"],[1273,"pear","梨子","名詞"],[1274,"pen","筆","名詞"],[1275,"pencil","鉛筆","名詞"],[1276,"pencil box","鉛筆盒","名詞"],[1277,"people","人們","名詞"],[1278,"pepper","胡椒","名詞"],[1279,"perfect","完美的","形容詞"],[1280,"period","時期","名詞"],[1281,"person","人","名詞"],[1282,"personal","個人的","形容詞"],[1283,"pet","寵物","名詞"],[1284,"photo","照片","名詞"],[1285,"physics","物理","名詞"],[1286,"piano","鋼琴","名詞"],[1287,"pick","撿起;選擇","動詞"],[1288,"picnic","野餐","名詞"],[1289,"picture","圖片","名詞"],[1290,"pie","派","名詞"],[1291,"piece","片;塊;件","名詞"],[1292,"pig","豬","名詞"],[1293,"pigeon","鴿子","名詞"],[1294,"pile","堆","名詞"],[1295,"pillow","枕頭","名詞"],[1296,"pin","大頭針","名詞"],[1297,"pineapple","鳳梨","名詞"],[1298,"pink","粉色","名詞"],[1299,"pipe","管子","名詞"],[1300,"pizza","披薩","名詞"],[1301,"place","地方","名詞"],[1302,"plain","平原","名詞"],[1303,"plan","計劃","動詞"],[1304,"planet","行星","名詞"],[1305,"plant","種植","動詞"],[1306,"plate","平盤","名詞"],[1307,"platform","月台","名詞"],[1308,"player","玩家:球員","名詞"],[1309,"playground","操場:遊樂場","名詞"],[1310,"plus","加號","名詞"],[1311,"pocket","口袋","名詞"],[1312,"poem","詩","名詞"],[1313,"point","點:尖端","名詞"],[1314,"poison","毒藥","名詞"],[1315,"police officer","警察","名詞"],[1316,"police station","警察局","名詞"],[1317,"polite","有禮貌的","形容詞"],[1318,"pollute","污染","動詞"],[1319,"pollution","污染","名詞"],[1320,"pond","池塘","名詞"],[1321,"pool","游泳池","名詞"],[1322,"pool","水池","名詞"],[1323,"poor","貧窮的;可憐的","形容詞"],[1324,"pop music","流行音樂","名詞"],[1325,"popcorn","爆米花","名詞"],[1326,"popular","受歡迎的","形容詞"],[1327,"population","人口","名詞"],[1328,"pork","豬肉","名詞"],[1329,"position","位置","名詞"],[1330,"positive","正面的;陽性的","形容詞"],[1331,"possible","可能的","形容詞"],[1332,"post office","郵局","名詞"],[1333,"postcard","明信片","名詞"],[1334,"potato","馬鈴薯","名詞"],[1335,"pound","磅","名詞"],[1336,"powder","粉末","名詞"],[1337,"power","力量:電力","名詞"],[1338,"practice","練習","動詞"],[1339,"praise","讚美","動詞"],[1340,"pray","祈禱","動詞"],[1341,"precious","珍貴的","形容詞"],[1342,"prepare","準備","動詞"],[1343,"prepare","準備","動詞"],[1344,"present","禮物","名詞"],[1345,"present","現在的;出席的","形容詞"],[1346,"president","總統","名詞"],[1347,"pressure","壓力","名詞"],[1348,"price","價格","名詞"],[1349,"priest","神父","名詞"],[1350,"prince","王子","名詞"],[1351,"princess","公主","名詞"],[1352,"principal","校長","名詞"],[1353,"principle","原則","名詞"],[1354,"print","列印","動詞"],[1355,"printer","印表機","名詞"],[1356,"private","私人的","形容詞"],[1357,"prize","獎品","名詞"],[1358,"problem","問題","名詞"],[1359,"produce","生產","動詞"],[1360,"production","生產","名詞"],[1361,"program","節目;程式","名詞"],[1362,"progress","進步","名詞"],[1363,"project","專案","名詞"],[1364,"promise","承諾","動詞"],[1365,"pronounce","發音","動詞"],[1366,"protect","保護","動詞"],[1367,"proud","驕傲的","形容詞"],[1368,"provide","提供","動詞"],[1369,"public","公眾的;公共的","形容詞"],[1370,"pull","拉","動詞"],[1371,"pumpkin","南瓜","名詞"],[1372,"punish","懲罰","動詞"],[1373,"puppy","小狗","名詞"],[1374,"purple","紫色","名詞"],[1375,"purpose","目的","名詞"],[1376,"purse","錢包(女用)","名詞"],[1377,"push","推","動詞"],[1378,"put","放","動詞"],[1379,"puzzle","拼圖;謎題","名詞"],[1380,"quarter","一刻鐘;四分之一","名詞"],[1381,"queen","女王","名詞"],[1382,"question","問題","名詞"],[1383,"quiet","安靜的","形容詞"],[1384,"quit","退出","動詞"],[1385,"quiz","小考","名詞"],[1386,"rabbit","兔子","名詞"],[1387,"race","賽跑;競賽","名詞"],[1388,"radio","收音機","名詞"],[1389,"railroad","鐵路","名詞"],[1390,"railway","鐵道","名詞"],[1391,"rain","下雨","動詞"],[1392,"rainbow","彩虹","名詞"],[1393,"raincoat","雨衣","名詞"],[1394,"rainy","下雨的","形容詞"],[1395,"raise","提高;撫養","動詞"],[1396,"rare","稀有的","形容詞"],[1397,"rat","大鼠","名詞"],[1398,"reach","到達","動詞"],[1399,"read","閱讀","動詞"],[1400,"ready","準備好的","形容詞"],[1401,"real","真實的","形容詞"],[1402,"realize","意識到","動詞"],[1403,"really","真地","副詞"],[1404,"reason","理由","名詞"],[1405,"receive","接收","動詞"],[1406,"record","紀錄","名詞"],[1407,"recover","恢復;痊癒","動詞"],[1408,"rectangle","長方形","名詞"],[1409,"recycle","回收","動詞"],[1410,"red","紅色","名詞"],[1411,"refrigerator","冰箱","名詞"],[1412,"refuse","拒絕","動詞"],[1413,"regret","後悔","動詞"],[1414,"regular","規律的;定期的","形容詞"],[1415,"reject","拒絕","動詞"],[1416,"relative","親戚","名詞"],[1417,"remember","記得","動詞"],[1418,"remind","提醒","動詞"],[1419,"rent","租用","動詞"],[1420,"repair","修復","動詞"],[1421,"repeat","重複","動詞"],[1422,"report","報告","名詞"],[1423,"reporter","記者","名詞"],[1424,"respect","尊重","動詞"],[1425,"responsible","負責的","形容詞"],[1426,"rest","休息","動詞"],[1427,"restaurant","餐廳","名詞"],[1428,"restroom","洗手間","名詞"],[1429,"result","結果","名詞"],[1430,"return","歸還","動詞"],[1431,"review","複習","動詞"],[1432,"revise","修改","動詞"],[1433,"rice","米飯","名詞"],[1434,"rich","有錢的","形容詞"],[1435,"ride","騎乘:搭乘","動詞"],[1436,"right","右邊的","形容詞"],[1437,"right","正確的;右邊的","形容詞"],[1438,"ring","戒指","名詞"],[1439,"rise","上升","動詞"],[1440,"river","河流","名詞"],[1441,"rob","搶劫","動詞"],[1442,"robot","機器人","名詞"],[1443,"rock","岩石","名詞"],[1444,"role","角色","名詞"],[1445,"roll","滾動","動詞"],[1446,"roller blade","溜直排輪","動詞"],[1447,"roller skate","溜輪鞋","動詞"],[1448,"roof","屋頂","名詞"],[1449,"room","房間","名詞"],[1450,"root","根","名詞"],[1451,"rope","繩子","名詞"],[1452,"rose","玫瑰","名詞"],[1453,"round","圓形的","形容詞"],[1454,"row","排;行","名詞"],[1455,"rub","摩擦","動詞"],[1456,"rude","粗魯的","形容詞"],[1457,"ruin","毀滅","動詞"],[1458,"rule","規則","名詞"],[1459,"ruler","尺","名詞"],[1460,"run","跑步","動詞"],[1461,"run","跑","動詞"],[1462,"sad","難過的","形容詞"],[1463,"safe","安全的","形容詞"],[1464,"safety","安全","名詞"],[1465,"sail","航行","動詞"],[1466,"sail","航行","動詞"],[1467,"sailor","水手","名詞"],[1468,"salad","沙拉","名詞"],[1469,"sale","拍賣:銷售","名詞"],[1470,"salesman","銷售員","名詞"],[1471,"salt","鹽","名詞"],[1472,"same","相同的","形容詞"],[1473,"sample","樣品","名詞"],[1474,"sand","沙子","名詞"],[1475,"sandwich","三明治","名詞"],[1476,"satisfy","滿足","動詞"],[1477,"Saturday","星期六","名詞"],[1478,"save","拯救;儲存","動詞"],[1479,"say","說","動詞"],[1480,"scared","害怕的","形容詞"],[1481,"scared","害怕的","形容詞"],[1482,"scarf","圍巾","名詞"],[1483,"scene","場景","名詞"],[1484,"scenery","風景","名詞"],[1485,"school","學校","名詞"],[1486,"science","科學","名詞"],[1487,"scientist","科學家","名詞"],[1488,"scooter","速克達;小摩托車","名詞"],[1489,"score","分數","名詞"],[1490,"screen","螢幕","名詞"],[1491,"sea","海","名詞"],[1492,"seafood","海鮮","名詞"],[1493,"search","搜尋","動詞"],[1494,"season","季節","名詞"],[1495,"seat","座位","名詞"],[1496,"second","第二","名詞"],[1497,"second","秒","名詞"],[1498,"secondary","次要的","形容詞"],[1499,"secret","秘密","名詞"],[1500,"secretary","秘書","名詞"],[1501,"section","部分","名詞"],[1502,"see","看見","動詞"],[1503,"seed","種子","名詞"],[1504,"seem","似乎","動詞"],[1505,"seesaw","翹翹板","名詞"],[1506,"seldom","很少","副詞"],[1507,"select","選擇","動詞"],[1508,"selfish","自私的","形容詞"],[1509,"sell","賣","動詞"],[1510,"semester","學期","名詞"],[1511,"send","傳送","動詞"],[1512,"senior high school","高中","名詞"],[1513,"sense","感覺;理智","名詞"],[1514,"sentence","句子","名詞"],[1515,"September","九月","名詞"],[1516,"serious","嚴肅的;嚴重的","形容詞"],[1517,"servant","僕人","名詞"],[1518,"serve","服務","動詞"],[1519,"service","服務","名詞"],[1520,"set","一套","名詞"],[1521,"seven","七","名詞"],[1522,"seventeen","十七","名詞"],[1523,"seventy","七十","名詞"],[1524,"several","幾個","限定詞"],[1525,"shake","搖動","動詞"],[1526,"shape","形狀","名詞"],[1527,"share","分享","動詞"],[1528,"shark","鯊魚","名詞"],[1529,"sharp","鋒利的;尖銳的","形容詞"],[1530,"she","她","代名詞 (主格)"],[1531,"sheep","綿羊","名詞"],[1532,"sheet","床單","名詞"],[1533,"sheet","一張(紙)","名詞"],[1534,"shelf","架子","名詞"],[1535,"shine","照耀","動詞"],[1536,"ship","船(大船)","名詞"],[1537,"shirt","襯衫","名詞"],[1538,"shoes","鞋子","名詞"],[1539,"shoot","射擊","動詞"],[1540,"shop","商店","名詞"],[1541,"shopkeeper","店主","名詞"],[1542,"shore","岸","名詞"],[1543,"short","矮的","形容詞"],[1544,"short","短的:矮的","形容詞"],[1545,"shorts","短褲","名詞"],[1546,"shoulder","肩膀","名詞"],[1547,"shout","喊叫","動詞"],[1548,"show","展示","動詞"],[1549,"shower","陣雨","名詞"],[1550,"shrimp","蝦","名詞"],[1551,"shrimp","蝦","名詞"],[1552,"shut","關閉","動詞"],[1553,"shy","害羞的","形容詞"],[1554,"sick","生病的","形容詞"],[1555,"side","邊;側","名詞"],[1556,"sidewalk","人行道","名詞"],[1557,"sight","景象","名詞"],[1558,"sign","簽名","動詞"],[1559,"silence","寂靜","名詞"],[1560,"silent","沉默的","形容詞"],[1561,"silly","傻的","形容詞"],[1562,"silver","銀","名詞"],[1563,"similar","相似的","形容詞"],[1564,"since","自從…","介系詞"],[1565,"since","自從;既然","連接詞"],[1566,"sincere","真誠的","形容詞"],[1567,"sing","唱歌","動詞"],[1568,"singer","歌手","名詞"],[1569,"single","單一的;單身部","形容詞"],[1570,"sink","水槽","名詞"],[1571,"sister","姊妹","名詞"],[1572,"six","六","名詞"],[1573,"sixteen","十六","名詞"],[1574,"sixty","六十","名詞"],[1575,"size","尺寸","名詞"],[1576,"skate","溜冰","動詞"],[1577,"ski","滑雪","動詞"],[1578,"skill","技能","名詞"],[1579,"skillful","熟練的","形容詞"],[1580,"skin","皮膚","名詞"],[1581,"skinny","極瘦的","形容詞"],[1582,"skirt","裙子","名詞"],[1583,"sky","天空","名詞"],[1584,"sleep","睡覺","動詞"],[1585,"sleepy","想睡的","形容詞"],[1586,"slender","苗條的","形容詞"],[1587,"slice","切片","動詞"],[1588,"slide","溜滑梯","名詞"],[1589,"slim","纖細的","形容詞"],[1590,"slippers","拖鞋","名詞"],[1591,"slow","慢的","形容詞"],[1592,"small","小的","形容詞"],[1593,"smart","聰明的","形容詞"],[1594,"smell","聞","動詞"],[1595,"smile","微笑","名詞"],[1596,"smoke","抽煙","動詞"],[1597,"snack","點心","名詞"],[1598,"snail","蝸牛","名詞"],[1599,"snake","蛇","名詞"],[1600,"sneakers","運動鞋","名詞"],[1601,"sneaky","鬼鬼祟祟的","形容詞"],[1602,"snow","雪","名詞"],[1603,"snowy","下雪的","形容詞"],[1604,"so","如此;這麼","副詞"],[1605,"soap","肥皂","名詞"],[1606,"soccer","足球","名詞"],[1607,"social","社會的;社交的","形容詞"],[1608,"social science","社會科學","名詞"],[1609,"society","社會","名詞"],[1610,"socks","襪子","名詞"],[1611,"soda","汽水","名詞"],[1612,"sofa","沙發","名詞"],[1613,"soft drink","軟性飲料","名詞"],[1614,"softball","壘球","名詞"],[1615,"soldier","士兵","名詞"],[1616,"solve","解決","動詞"],[1617,"some","一些","代名詞"],[1618,"someone","某人","代名詞"],[1619,"something","某事","代名詞"],[1620,"sometimes","有時候","副詞"],[1621,"somewhere","某個地方","副詞"],[1622,"son","兒子","名詞"],[1623,"song","歌曲","名詞"],[1624,"soon","很快;不久","副詞"],[1625,"sore throat","喉嚨痛","名詞"],[1626,"sorry","抱歉的;難過的","形容詞"],[1627,"soul","靈魂","名詞"],[1628,"sound","聽起來","動詞"],[1629,"soup","湯","名詞"],[1630,"sour","酸的","形容詞"],[1631,"south","南方的","形容詞"],[1632,"soy sauce","醬油","名詞"],[1633,"space","空間","名詞"],[1634,"spaghetti","義大利麵","名詞"],[1635,"speak","說話","動詞"],[1636,"speaker","喇叭","名詞"],[1637,"special","特別的","形容詞"],[1638,"speech","演講","名詞"],[1639,"speed","速度","名詞"],[1640,"spell","拼寫","動詞"],[1641,"spend","花費","動詞"],[1642,"spider","蜘蛛","名詞"],[1643,"spirit","精神","名詞"],[1644,"spoon","湯匙","名詞"],[1645,"sports","運動","名詞"],[1646,"spot","污點","名詞"],[1647,"spread","塗抹","動詞"],[1648,"spring","春天","名詞"],[1649,"spring","泉水","名詞"],[1650,"square","正方形","名詞"],[1651,"stairs","樓梯","名詞"],[1652,"stamp","郵票","名詞"],[1653,"stand","站立","動詞"],[1654,"star","星星","名詞"],[1655,"start","開始","動詞"],[1656,"state","狀態;州","名詞"],[1657,"station","車站","名詞"],[1658,"stationery store","文具店","名詞"],[1659,"stay","停留","動詞"],[1660,"steak","牛排","名詞"],[1661,"steal","偷竊","動詞"],[1662,"steam","蒸汽","名詞"],[1663,"step","步驟;腳步","名詞"],[1664,"still","仍然","副詞"],[1665,"stingy","小氣的","形容詞"],[1666,"stomach","胃","名詞"],[1667,"stomachache","胃痛","名詞"],[1668,"stone","石頭","名詞"],[1669,"stop","停止","動詞"],[1670,"stopwatch","碼表","名詞"],[1671,"store","商店","名詞"],[1672,"storm","暴風雨","名詞"],[1673,"stormy","暴風雨的","形容詞"],[1674,"story","故事","名詞"],[1675,"story","故事","名詞"],[1676,"stove","爐子","名詞"],[1677,"straight","直的","形容詞"],[1678,"strange","奇怪的","形容詞"],[1679,"stranger","陌生人","名詞"],[1680,"straw","吸管","名詞"],[1681,"strawberry","草莓","名詞"],[1682,"stream","溪流","名詞"],[1683,"street","街道","名詞"],[1684,"strike","打擊;罷工","動詞"],[1685,"string","細繩","名詞"],[1686,"strong","強壯的","形容詞"],[1687,"student","學生","名詞"],[1688,"study","研讀","動詞"],[1689,"stupid","笨的","形容詞"],[1690,"style","風格","名詞"],[1691,"subject","主題;科目","名詞"],[1692,"subway","地鐵","名詞"],[1693,"succeed","成功","動詞"],[1694,"success","成功","名詞"],[1695,"successful","成功的","形容詞"],[1696,"sudden","突然的","形容詞"],[1697,"sugar","糖","名詞"],[1698,"suggest","建議","動詞"],[1699,"suit","西裝","名詞"],[1700,"summer","夏天","名詞"],[1701,"sun","太陽","名詞"],[1702,"Sunday","星期日","名詞"],[1703,"sunny","陽光充足的","形容詞"],[1704,"super","超級的","形容詞"],[1705,"supermarket","超市","名詞"],[1706,"supper","消夜","名詞"],[1707,"support","支持","動詞"],[1708,"surf","衝浪","動詞"],[1709,"surprise","使驚訝","動詞"],[1710,"surprised","感到驚訝的","形容詞"],[1711,"survive","生存","動詞"],[1712,"swallow","吞嚥","動詞"],[1713,"swan","天鵝","名詞"],[1714,"sweater","毛衣","名詞"],[1715,"sweep","清掃","動詞"],[1716,"sweet","甜的","形容詞"],[1717,"swim","游泳","動詞"],[1718,"swimsuit","泳衣","名詞"],[1719,"swing","鞦韆;搖擺","名詞"],[1720,"symbol","符號","名詞"],[1721,"system","系統","名詞"],[1722,"table","桌子","名詞"],[1723,"table tennis","桌球","名詞"],[1724,"tail","尾巴","名詞"],[1725,"Taiwanese","台灣人","名詞"],[1726,"take","拿:帶","動詞"],[1727,"talent","天賦","名詞"],[1728,"talk","談話","動詞"],[1729,"talkative","健談的","形容詞"],[1730,"tall","高的","形容詞"],[1731,"tangerine","橘子","名詞"],[1732,"tank","坦克車","名詞"],[1733,"taste","嘗起來","動詞"],[1734,"taxi","計程車","名詞"],[1735,"tea","茶","名詞"],[1736,"teach","教學","動詞"],[1737,"teacher","老師","名詞"],[1738,"Teacher's Day","教師節","名詞"],[1739,"team","隊伍","名詞"],[1740,"teapot","茶壺","名詞"],[1741,"tear","眼淚","名詞"],[1742,"teenager","青少年","名詞"],[1743,"telephone","電話","名詞"],[1744,"television","電視","名詞"],[1745,"tell","告訴","動詞"],[1746,"temperature","溫度","名詞"],[1747,"temple","寺廟","名詞"],[1748,"ten","十","名詞"],[1749,"tennis","網球","名詞"],[1750,"tent","帳篷","名詞"],[1751,"term","學期","名詞"],[1752,"terrible","糟糕的;可怕的","形容詞"],[1753,"terrific","極好的","形容詞"],[1754,"test","測驗","名詞"],[1755,"textbook","教科書","名詞"],[1756,"than","比…","介系詞"],[1757,"than","比","連接詞"],[1758,"thank","感謝","動詞"],[1759,"Thanksgiving","感恩節","名詞"],[1760,"that","那個(遠指單數)","限定詞"],[1761,"theater","劇院","名詞"],[1762,"their","他們的","所有格"],[1763,"their","他們的;它們的","所有格"],[1764,"theirs","他們的;它們的","代名詞"],[1765,"them","他們;它們","代名詞 (受格)"],[1766,"themselves","他們自己;它們自己","代名詞"],[1767,"then","然後","副詞"],[1768,"therefore","因此","副詞"],[1769,"these","這些(近指複數)","限定詞"],[1770,"they","他們;它們","代名詞 (主格)"],[1771,"thick","厚的","形容詞"],[1772,"thief","小偷","名詞"],[1773,"thin","瘦的","形容詞"],[1774,"thing","東西","名詞"],[1775,"think","思考","動詞"],[1776,"third","第三","名詞"],[1777,"thirsty","渴的","形容詞"],[1778,"thirteen","十三","名詞"],[1779,"thirty","三十","名詞"],[1780,"this","這個(近指單數)","限定詞"],[1781,"those","那些(遠指複數)","限定詞"],[1782,"though","雖然","連接詞"],[1783,"thought","想法","名詞"],[1784,"thousand","千","名詞"],[1785,"three","三","名詞"],[1786,"throat","喉嚨","名詞"],[1787,"through","穿過;透過","介系詞"],[1788,"throw","丟擲","動詞"],[1789,"thumb","拇指","名詞"],[1790,"thunder","雷聲","名詞"],[1791,"Thursday","星期四","名詞"],[1792,"ticket","票","名詞"],[1793,"tidy","整潔的","形容詞"],[1794,"tie","領帶","名詞"],[1795,"tiger","老虎","名詞"],[1796,"time","時間","名詞"],[1797,"tiny","微小的","形容詞"],[1798,"tip","小費;提示","名詞"],[1799,"tired","疲倦的","形容詞"],[1800,"title","標題","名詞"],[1801,"to","到……;向………","介系詞"],[1802,"toast","吐司","名詞"],[1803,"today","今天","名詞"],[1804,"toe","腳趾","名詞"],[1805,"tofu","豆腐","名詞"],[1806,"together","一起","副詞"],[1807,"toilet","馬桶","名詞"],[1808,"tomato","番茄","名詞"],[1809,"tomorrow","明天","名詞"],[1810,"tongue","舌頭","名詞"],[1811,"tonight","今晚","名詞"],[1812,"tool","工具","名詞"],[1813,"tooth","牙齒","名詞"],[1814,"toothache","牙痛","名詞"],[1815,"toothbrush","牙刷","名詞"],[1816,"top","頂部的","形容詞"],[1817,"topic","話題","名詞"],[1818,"total","總數","名詞"],[1819,"touch","觸摸","動詞"],[1820,"toward","朝向…","介系詞"],[1821,"towel","毛巾","名詞"],[1822,"tower","塔","名詞"],[1823,"town","城鎮","名詞"],[1824,"toy","玩具","名詞"],[1825,"trade","貿易","名詞"],[1826,"tradition","傳統","名詞"],[1827,"traditional","傳統的","形容詞"],[1828,"traffic","交通","名詞"],[1829,"train","火車","名詞"],[1830,"train station","火車站","名詞"],[1831,"trash","垃圾","名詞"],[1832,"trash can","垃圾桶","名詞"],[1833,"travel","旅行","動詞"],[1834,"treasure","寶藏","名詞"],[1835,"treat","款待","名詞"],[1836,"treat","對待","動詞"],[1837,"tree","樹","名詞"],[1838,"triangle","三角形","名詞"],[1839,"trick","詭計","名詞"],[1840,"trip","旅行","名詞"],[1841,"trouble","麻煩","名詞"],[1842,"truck","卡車","名詞"],[1843,"trumpet","小喇叭","名詞"],[1844,"trust","信任","動詞"],[1845,"truth","真相","名詞"],[1846,"try","嘗試","動詞"],[1847,"T-shirt","T恤","名詞"],[1848,"tub","浴缸","名詞"],[1849,"tube","管子","名詞"],[1850,"Tuesday","星期二","名詞"],[1851,"tunnel","隧道","名詞"],[1852,"turkey","火雞","名詞"],[1853,"turn","轉彎","動詞"],[1854,"turtle","烏龜","名詞"],[1855,"twelve","十二","名詞"],[1856,"twenty","二十","名詞"],[1857,"twice","兩次","副詞"],[1858,"two","二","名詞"],[1859,"type","打字","動詞"],[1860,"typhoon","颱風","名詞"],[1861,"ugly","醜陋的","形容詞"],[1862,"umbrella","雨傘","名詞"],[1863,"umbrella","雨傘","名詞"],[1864,"uncle","叔叔:舅舅","名詞"],[1865,"under","在…下面","介系詞"],[1866,"underline","畫底線","動詞"],[1867,"underpass","地下道","名詞"],[1868,"understand","理解","動詞"],[1869,"underwear","內衣","名詞"],[1870,"under-weight","體重不足的","形容詞"],[1871,"unhappy","不快樂的","形容詞"],[1872,"uniform","制服","名詞"],[1873,"unique","獨特的","形容詞"],[1874,"universe","宇宙","名詞"],[1875,"university","大學","名詞"],[1876,"until","直到…","介系詞"],[1877,"up","沿…而上","介系詞"],[1878,"upload","上傳","動詞"],[1879,"upstairs","樓上","名詞"],[1880,"us","我們","代名詞 (受格)"],[1881,"use","使用","動詞"],[1882,"useful","有用的","形容詞"],[1883,"usually","通常","副詞"],[1884,"vacation","假期","名詞"],[1885,"Valentine's Day","情人節","名詞"],[1886,"valley","山谷","名詞"],[1887,"valuable","有價值的","形容詞"],[1888,"value","價值","名詞"],[1889,"vegetable","蔬菜","名詞"],[1890,"vendor","小販","名詞"],[1891,"very","非常","副詞"],[1892,"vest","背心","名詞"],[1893,"victory","勝利","名詞"],[1894,"video","影片;錄影機","名詞"],[1895,"village","村莊","名詞"],[1896,"vinegar","醋","名詞"],[1897,"violin","小提琴","名詞"],[1898,"visit","拜訪","動詞"],[1899,"visitor","訪客","名詞"],[1900,"vocabulary","字彙","名詞"],[1901,"voice","聲音","名詞"],[1902,"volleyball","排球","名詞"],[1903,"vote","投票","動詞"],[1904,"waist","腰部","名詞"],[1905,"wait","等待","動詞"],[1906,"waiter","服務生(男性)","名詞"],[1907,"waitress","服務生(女性)","名詞"],[1908,"wake","醒來","動詞"],[1909,"walk","走路","動詞"],[1910,"wall","牆","名詞"],[1911,"wallet","皮夾(男用)","名詞"],[1912,"want","想要","動詞"],[1913,"war","戰爭","名詞"],[1914,"warm","溫暖的","形容詞"],[1915,"wash","清洗","動詞"],[1916,"waste","浪費","動詞"],[1917,"watch","手錶","名詞"],[1918,"watch","觀看","動詞"],[1919,"water","水","名詞"],[1920,"waterfalls","瀑布","名詞"],[1921,"watermelon","西瓜","名詞"],[1922,"wave","揮手","動詞"],[1923,"way","方式:道路","名詞"],[1924,"we","我們","代名詞 (主格)"],[1925,"weak","虛弱的","形容詞"],[1926,"wear","穿著","動詞"],[1927,"weather","天氣","名詞"],[1928,"wedding","婚禮","名詞"],[1929,"Wednesday","星期三","名詞"],[1930,"week","星期:週","名詞"],[1931,"week","星期;週","名詞"],[1932,"weekday","平日(週一至週五)","名詞"],[1933,"weekend","週末","名詞"],[1934,"weekend","週末","名詞"],[1935,"weight","重量","名詞"],[1936,"welcome","歡迎","動詞"],[1937,"well","身體健康的","形容詞"],[1938,"west","西方的","形容詞"],[1939,"wet","潮濕的","形容詞"],[1940,"whale","鯨魚","名詞"],[1941,"what","什麼","疑問詞"],[1942,"wheel","輪子","名詞"],[1943,"when","何時","疑問詞"],[1944,"where","在哪裡","疑問詞"],[1945,"whether","是否","連接詞"],[1946,"which","哪一個","疑問詞"],[1947,"while","當…時;然而","連接詞"],[1948,"white","白色","名詞"],[1949,"who","誰","疑問詞"],[1950,"whose","誰的","疑問詞"],[1951,"why","為什麼","疑問詞"],[1952,"wide","寬的","形容詞"],[1953,"wife","妻子","名詞"],[1954,"wild","野生的;狂野的","形容詞"],[1955,"win","贏得","動詞"],[1956,"wind","風","名詞"],[1957,"window","窗戶","名詞"],[1958,"windy","多風的","形容詞"],[1959,"wing","翅膀","名詞"],[1960,"winner","贏家","名詞"],[1961,"winter","冬天","名詞"],[1962,"wise","有智慧的","形容詞"],[1963,"wish","希望","動詞"],[1964,"with","和…一起;用…","介系詞"],[1965,"without","沒有……","介系詞"],[1966,"wok","炒鍋","名詞"],[1967,"wolf","狼","名詞"],[1968,"woman","女人","名詞"],[1969,"women's room","女廁","名詞"],[1970,"wonderful","美妙的","形容詞"],[1971,"wood","木材","名詞"],[1972,"woods","樹林","名詞"],[1973,"word","字詞","名詞"],[1974,"workbook","練習本","名詞"],[1975,"worm","蠕蟲","名詞"],[1976,"worry","擔心","動詞"],[1977,"wound","創傷:傷口","名詞"],[1978,"wrist","手腕","名詞"],[1979,"write","書寫","動詞"],[1980,"writer","作家","名詞"],[1981,"wrong","錯誤的","形容詞"],[1982,"yard","院子","名詞"],[1983,"yard","碼","名詞"],[1984,"year","年","名詞"],[1985,"yell","大叫","動詞"],[1986,"yellow","黃色","名詞"],[1987,"yesterday","昨天","名詞"],[1988,"yet","尚未;但是","副詞"],[1989,"you","你;你們","代名詞 (主/受格)"],[1990,"young","年輕的","形容詞"],[1991,"your","你的;你們的","所有格"],[1992,"your","你的;你們的","所有格"],[1993,"yours","你的;你們的","代名詞"],[1994,"yourself","你自己","代名詞"],[1995,"yourselves","你們自己","代名詞"],[1996,"youth","青年","名詞"],[1997,"yummy","好吃的","形容詞"],[1998,"zebra","斑馬","名詞"],[1999,"zero","零","名詞"],[2000,"ZOO","動物園","名詞"]
         ];
 
         // Decompress to object format for easier usage
@@ -481,6 +441,7 @@
         let currentFloor = 1;
         const maxFloor = 101;
         let currentMode = 1;
+        let selectedDifficulty = 3; // Default 3 lives
         let currentWord = null;
         let isSoundOn = true;
         let lives = 3;
@@ -517,37 +478,37 @@
         const rewards = [
             {
                 id: 'fireworks',
-                title: '新年快樂！',
+                title: 'HAPPY NEW YEAR',
                 message: '絢麗煙火為你綻放！',
-                class: 'reward-fireworks',
-                icon: '<i class="fas fa-fire-alt text-5xl text-red-500 animate-bounce"></i>',
+                class: 'bg-gradient-to-br from-red-900 to-black',
+                icon: '<i class="fas fa-fire-alt text-red-500 animate-bounce"></i>',
                 glow: 'bg-red-500',
                 effect: () => createConfetti()
             },
             {
                 id: 'sunrise',
-                title: '雲端日出',
+                title: 'MORNING GLORY',
                 message: '看見第一道曙光！',
-                class: 'reward-sunrise',
-                icon: '<i class="fas fa-sun text-6xl text-yellow-300 animate-sunrise"></i>',
+                class: 'bg-gradient-to-br from-orange-600 to-purple-900',
+                icon: '<i class="fas fa-sun text-yellow-300 animate-pulse"></i>',
                 glow: 'bg-yellow-400',
                 effect: () => {} 
             },
             {
                 id: 'galaxy',
-                title: '銀河漫遊',
+                title: 'STAR WALKER',
                 message: '伸手摘星，夢想成真！',
-                class: 'reward-galaxy',
-                icon: '<i class="fas fa-star text-5xl text-yellow-100 animate-pulse"></i>',
+                class: 'bg-gradient-to-br from-indigo-900 to-black',
+                icon: '<i class="fas fa-star text-yellow-100 animate-pulse"></i>',
                 glow: 'bg-indigo-500',
                 effect: () => {}
             },
             {
                 id: 'cyber',
-                title: '未來城市',
+                title: 'CYBER CITY',
                 message: '歡迎來到 2077 台北！',
-                class: 'reward-cyber',
-                icon: '<i class="fas fa-robot text-5xl text-cyan-400 animate-laser"></i>',
+                class: 'bg-gradient-to-br from-cyan-900 to-black',
+                icon: '<i class="fas fa-robot text-cyan-400 animate-pulse"></i>',
                 glow: 'bg-cyan-500',
                 effect: () => {}
             }
@@ -557,47 +518,83 @@
 
         function initTower() {
             let html = '';
+            
+            // 1. 基座 (Foundation) - HTML 第一個元素，但在 column-reverse 下會在最底層
+            html += `<div class="tower-base-foundation"></div>`;
+
+            // 2. 樓層 (1 -> 101)
             for (let i = 1; i <= maxFloor; i++) {
                 let floorClass = 'floor';
-                
-                if (i <= 5) {
-                    floorClass += ' floor-base';
-                } else if (i % 8 === 0 && i < 100) {
-                    floorClass += ' floor floor-segment-top';
-                }
+                let extraContent = '';
 
+                // 每 8 層的節點 (視覺上的頂部)
+                // 101 結構：每節 8 層，倒梯形
+                // 排除最底部和最頂部的一些特殊處理
+                if ((i - 5) % 8 === 0 && i < 90 && i > 5) {
+                    floorClass += ' floor-segment-top';
+                    extraContent += `<div class="ruyi-ornament"></div>`;
+                }
+                
                 let climberHtml = '';
                 if (i === 1) {
                     floorClass += ' active';
                     climberHtml = `
                         <div id="climber" class="climber-avatar">
-                            <svg viewBox="0 0 24 24" class="climber-svg">
-                                <circle cx="13" cy="5" r="2.2" class="climber-head"/>
-                                <path d="M13 7 L17 2 M13 7 L9 8 L7 6 M13 7 L12 13 M12 13 L16 12 L17 15 M12 13 L10 18 L11 22" />
+                            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="18" cy="18" r="16" fill="#1e293b" stroke="#2dd4bf" stroke-width="2"/>
+                                <path d="M18 12C19.6569 12 21 10.6569 21 9C21 7.34315 19.6569 6 18 6C16.3431 6 15 7.34315 15 9C15 10.6569 16.3431 12 18 12Z" fill="#2dd4bf"/>
+                                <path d="M18 14C15.3333 14 10 15.3333 10 18V24H13V29L16 29V24H20V29L23 29V24H26V18C26 15.3333 20.6667 14 18 14Z" fill="#2dd4bf"/>
                             </svg>
                         </div>`;
                 }
-                
+
                 html += `<div id="floor-${i}" class="${floorClass}">
-                            ${i}F ${climberHtml}
+                            ${extraContent}
+                            <span class="relative z-10 font-mono tracking-tighter">${i}F</span>
+                            ${climberHtml}
                          </div>`;
             }
             
+            // 3. 尖塔 (Spire) - HTML 最後一個元素，在 column-reverse 下會在最頂層
             html += `
                 <div class="spire-container">
-                    <div class="spire-needle"></div>
-                    <div class="spire-tier"></div>
                     <div class="spire-base"></div>
+                    <div class="spire-tier"></div>
+                    <div class="spire-needle"></div>
                 </div>
             `;
             
             towerContainer.innerHTML = html;
         }
 
+        function selectDifficulty(livesVal) {
+            selectedDifficulty = livesVal;
+            
+            // Remove active states
+            [1,3,5].forEach(val => {
+                const btn = document.getElementById(`diff-btn-${val}`);
+                btn.classList.remove('selected', 'bg-red-500/20', 'border-red-500', 'bg-teal-500/20', 'border-teal-500', 'bg-green-500/20', 'border-green-500');
+                btn.classList.add('bg-white/5', 'border-white/5'); // Reset to default
+                
+                // Remove existing checkmarks/decorations if any (simplified: just visual styles)
+                if(val === 3) {
+                     // 3 is default style, fix later if needed
+                }
+            });
+
+            const targetBtn = document.getElementById(`diff-btn-${livesVal}`);
+            targetBtn.classList.remove('bg-white/5', 'border-white/5');
+            targetBtn.classList.add('selected');
+
+            if(livesVal === 1) targetBtn.classList.add('bg-red-500/20', 'border-red-500');
+            if(livesVal === 3) targetBtn.classList.add('bg-teal-500/20', 'border-teal-500');
+            if(livesVal === 5) targetBtn.classList.add('bg-green-500/20', 'border-green-500');
+        }
+
         function startGame(mode) {
             currentMode = mode;
             currentFloor = 1;
-            lives = 3;
+            lives = selectedDifficulty;
             elapsedSeconds = 0;
             
             startScreen.classList.add('hidden');
@@ -615,15 +612,21 @@
                 optionsGrid.classList.add('hidden');
                 inputArea.classList.remove('hidden');
                 inputArea.classList.add('flex');
+                // Auto focus logic moved to nextQuestion
             } else {
                 inputArea.classList.add('hidden');
                 optionsGrid.classList.remove('hidden');
+                optionsGrid.classList.add('grid');
             }
 
             initTower();
-            floorsContainer.scrollTop = floorsContainer.scrollHeight;
-            updateFloorDisplay();
+            // Scroll to bottom
+            setTimeout(() => {
+                const climber = document.getElementById('climber');
+                if(climber) climber.scrollIntoView({behavior: "auto", block: "center"});
+            }, 100);
             
+            updateFloorDisplay();
             nextQuestion();
         }
 
@@ -647,11 +650,11 @@
 
         function updateLivesDisplay() {
             let html = '';
-            for(let i=0; i<3; i++) {
+            for(let i=0; i<selectedDifficulty; i++) {
                 if (i < lives) {
-                    html += '<i class="fas fa-heart text-red-500 text-lg drop-shadow-[0_0_5px_rgba(239,68,68,0.8)]"></i>';
+                    html += '<i class="fas fa-heart text-red-500 text-xs md:text-sm drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"></i>';
                 } else {
-                    html += '<i class="fas fa-heart text-gray-700 text-lg"></i>';
+                    html += '<i class="fas fa-heart text-gray-800 text-xs md:text-sm"></i>';
                 }
             }
             livesContainer.innerHTML = html;
@@ -697,7 +700,7 @@
             
             options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = "bg-white/10 hover:bg-white/20 border border-white/10 text-white font-semibold py-5 px-4 rounded-xl shadow transition transform active:scale-95 text-lg h-full flex items-center justify-center break-words backdrop-blur-sm";
+                btn.className = "glass-btn text-white font-medium py-2 px-3 md:px-4 rounded-xl text-sm md:text-lg h-full flex items-center justify-center break-words hover:bg-white/10 hover:border-white/30";
                 btn.textContent = opt;
                 btn.onclick = () => checkAnswer(opt, correctAnswer, btn);
                 optionsGrid.appendChild(btn);
@@ -708,12 +711,12 @@
             if (selected === correct) {
                 handleCorrect();
                 if (btnElement) {
-                    btnElement.className = "bg-green-500/80 border-green-400 text-white font-bold py-5 px-4 rounded-xl shadow-[0_0_15px_rgba(34,197,94,0.5)] transition text-lg h-full flex items-center justify-center backdrop-blur-md";
+                    btnElement.className = "bg-teal-500 text-white font-black py-2 px-3 rounded-xl shadow-[0_0_20px_rgba(20,184,166,0.6)] transition-all duration-300 text-sm md:text-lg h-full flex items-center justify-center transform scale-105 border border-teal-300";
                 }
             } else {
                 handleWrong();
                 if (btnElement) {
-                    btnElement.className = "bg-red-500/80 border-red-400 text-white font-bold py-5 px-4 rounded-xl shadow-[0_0_15px_rgba(239,68,68,0.5)] transition text-lg h-full flex items-center justify-center shake backdrop-blur-md";
+                    btnElement.className = "bg-red-500 text-white font-bold py-2 px-3 rounded-xl shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-300 text-sm md:text-lg h-full flex items-center justify-center shake border border-red-300";
                 }
             }
         }
@@ -727,8 +730,8 @@
                 handleCorrect();
             } else {
                 handleWrong();
-                input.classList.add('border-red-500', 'shake', 'shadow-[0_0_10px_red]');
-                setTimeout(() => input.classList.remove('border-red-500', 'shake', 'shadow-[0_0_10px_red]'), 500);
+                input.classList.add('border-red-500', 'shake', 'shadow-[0_0_15px_red]');
+                setTimeout(() => input.classList.remove('border-red-500', 'shake', 'shadow-[0_0_15px_red]'), 500);
             }
         }
 
@@ -739,7 +742,7 @@
         });
 
         function handleCorrect() {
-            showFeedback("CORRECT", "text-teal-400");
+            showFeedback("EXCELLENT", "text-teal-300 text-shadow-[0_0_10px_rgba(45,212,191,0.8)]");
             speakText(currentWord.en);
             moveClimberUp();
             
@@ -749,13 +752,13 @@
                 } else {
                     gameOver(true);
                 }
-            }, 1000);
+            }, 800);
         }
 
         function handleWrong() {
             lives--;
             updateLivesDisplay();
-            showFeedback("WRONG", "text-red-500");
+            showFeedback("TRY AGAIN", "text-red-400 text-shadow-[0_0_10px_rgba(248,113,113,0.8)]");
             
             if (lives <= 0) {
                 setTimeout(() => gameOver(false), 500);
@@ -763,8 +766,8 @@
         }
 
         function showFeedback(msg, colorClass) {
-            feedback.textContent = msg;
-            feedback.className = `h-10 mt-4 font-black text-2xl text-center drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] transition-all duration-300 opacity-100 tracking-widest uppercase ${colorClass}`;
+            feedback.innerHTML = `<span class="${colorClass}">${msg}</span>`;
+            feedback.style.opacity = '1';
         }
 
         function moveClimberUp() {
@@ -791,58 +794,62 @@
 
         function gameOver(isVictory) {
             stopTimer();
-            saveScore(currentFloor, elapsedSeconds);
             
             const finalFloor = document.getElementById('final-floor');
             const finalTime = document.getElementById('final-time');
+            const nameInput = document.getElementById('player-name');
 
             // Reset Card Styles
-            endCard.className = "glass-panel border-t border-white/20 text-white rounded-[2rem] shadow-2xl max-w-sm w-full p-8 text-center relative overflow-hidden transition-all duration-500";
-            endGlow.className = "absolute -top-20 -left-20 w-40 h-40 rounded-full blur-[80px] opacity-20 transition-colors duration-500";
-
+            endCard.className = "glass-panel border-t border-white/20 text-white rounded-[2.5rem] shadow-2xl max-w-sm w-full p-8 text-center relative overflow-hidden transition-all duration-500 transform scale-100 opacity-100";
+            
             if (isVictory) {
-                // Random Reward Logic
                 const reward = rewards[Math.floor(Math.random() * rewards.length)];
-                
                 endTitle.textContent = reward.title;
                 endMessage.textContent = reward.message;
                 endIcon.innerHTML = reward.icon;
+                endCard.className += " " + reward.class; 
                 
-                // Apply Theme
-                endCard.classList.add(reward.class);
-                endGlow.classList.add(reward.glow);
-                
-                // Trigger Effect
                 if(reward.effect) reward.effect();
-
             } else {
                 endTitle.textContent = "GAME OVER";
-                endMessage.textContent = "Don't give up! Try again.";
-                endIcon.innerHTML = `
-                    <div class="w-24 h-24 mx-auto bg-gradient-to-br from-gray-700 to-gray-900 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.3)]">
-                        <i class="fas fa-heart-broken text-4xl text-red-500"></i>
-                    </div>`;
-                endGlow.classList.add('bg-red-500');
+                endMessage.textContent = "Don't give up, climber!";
+                endIcon.innerHTML = `<i class="fas fa-mountain text-gray-500"></i>`;
+                endCard.classList.add('bg-gray-900');
             }
 
             finalFloor.textContent = currentFloor + "F";
             const mins = Math.floor(elapsedSeconds / 60).toString().padStart(2, '0');
             const secs = (elapsedSeconds % 60).toString().padStart(2, '0');
             finalTime.textContent = `${mins}:${secs}`;
+            
+            nameInput.value = '';
 
             uiContainer.classList.add('hidden');
             gameHud.classList.add('hidden');
             endScreen.classList.remove('hidden');
+            
+            setTimeout(() => nameInput.focus(), 500);
         }
 
-        function saveScore(floor, seconds) {
+        function submitScoreAndReset() {
+            const nameInput = document.getElementById('player-name');
+            const playerName = nameInput.value.trim() || 'Climber'; 
+            
+            saveScore(playerName, currentFloor, elapsedSeconds);
+            resetGame();
+        }
+
+        function saveScore(name, floor, seconds) {
             const record = {
+                name: name,
                 floor: floor,
                 time: seconds,
-                date: new Date().toLocaleDateString()
+                date: new Date().toLocaleDateString(),
+                mode: currentMode,
+                diff: selectedDifficulty
             };
             
-            let leaderboard = JSON.parse(localStorage.getItem('wordClimberLeaderboard')) || [];
+            let leaderboard = JSON.parse(localStorage.getItem('wordClimberLeaderboardV3')) || [];
             leaderboard.push(record);
             
             leaderboard.sort((a, b) => {
@@ -850,32 +857,40 @@
                 return a.time - b.time;
             });
             
-            leaderboard = leaderboard.slice(0, 5);
-            localStorage.setItem('wordClimberLeaderboard', JSON.stringify(leaderboard));
+            leaderboard = leaderboard.slice(0, 10);
+            localStorage.setItem('wordClimberLeaderboardV3', JSON.stringify(leaderboard));
             
             updateLeaderboardUI();
         }
 
         function updateLeaderboardUI() {
-            const leaderboard = JSON.parse(localStorage.getItem('wordClimberLeaderboard')) || [];
-            leaderboardBody.innerHTML = leaderboard.length ? '' : '<tr><td colspan="3" class="text-center py-3 text-gray-600">No records yet</td></tr>';
+            const leaderboard = JSON.parse(localStorage.getItem('wordClimberLeaderboardV3')) || [];
+            leaderboardBody.innerHTML = leaderboard.length ? '' : '<tr><td colspan="4" class="text-center py-4 text-gray-500 italic">No records yet. Be the first!</td></tr>';
             
             leaderboard.forEach((rec, index) => {
                 const mins = Math.floor(rec.time / 60).toString().padStart(2, '0');
                 const secs = (rec.time % 60).toString().padStart(2, '0');
                 
-                let rankColor = 'text-gray-400';
-                let icon = '';
-                if(index === 0) { rankColor = 'text-yellow-400'; icon = '<i class="fas fa-crown text-xs ml-1"></i>'; }
-                else if(index === 1) rankColor = 'text-gray-300';
-                else if(index === 2) rankColor = 'text-orange-400';
-
+                let rankColor = 'text-gray-500';
+                if(index === 0) rankColor = 'text-yellow-400 font-black';
+                if(index === 1) rankColor = 'text-gray-300 font-bold';
+                if(index === 2) rankColor = 'text-orange-400 font-bold';
+                
+                let modeIcon = rec.mode === 3 ? '<i class="fas fa-keyboard text-[10px]"></i>' : (rec.mode === 1 ? '<i class="fas fa-language text-[10px]"></i>' : '<i class="fas fa-brain text-[10px]"></i>');
+                
                 const tr = document.createElement('tr');
-                tr.className = "border-b border-white/5 hover:bg-white/5 transition";
+                tr.className = "border-b border-white/5 last:border-0";
                 tr.innerHTML = `
-                    <td class="py-2 pl-2 ${rankColor} font-bold">#${index + 1} ${icon}</td>
-                    <td class="py-2 font-bold text-white">${rec.floor}F</td>
-                    <td class="py-2 pr-2 text-right font-mono text-blue-300">${mins}:${secs}</td>
+                    <td class="py-2 pl-2 ${rankColor} w-6 text-center">${index + 1}</td>
+                    <td class="py-2">
+                        <div class="font-bold text-gray-200 text-xs truncate max-w-[100px]">${rec.name}</div>
+                        <div class="flex gap-2 mt-0.5 opacity-60">
+                            ${modeIcon}
+                            <span class="text-[9px]">${rec.diff} Lives</span>
+                        </div>
+                    </td>
+                    <td class="py-2 font-black text-teal-400 text-center text-xs">${rec.floor}F</td>
+                    <td class="py-2 pr-2 text-right font-mono text-cyan-500 text-[10px]">${mins}:${secs}</td>
                 `;
                 leaderboardBody.appendChild(tr);
             });
@@ -888,12 +903,13 @@
             gameHud.classList.add('hidden');
             initTower();
             updateLeaderboardUI();
+            selectDifficulty(3); 
         }
 
         function toggleSound() {
             isSoundOn = !isSoundOn;
             const icon = document.getElementById('sound-icon');
-            icon.className = isSoundOn ? 'fas fa-volume-up text-xs' : 'fas fa-volume-mute text-xs';
+            icon.className = isSoundOn ? 'fas fa-volume-up' : 'fas fa-volume-mute text-red-400';
         }
 
         function speakCurrentWord() {
@@ -910,24 +926,22 @@
         }
 
         function createConfetti() {
-            for(let i=0; i<50; i++) {
+            for(let i=0; i<60; i++) {
                 const conf = document.createElement('div');
                 conf.className = 'confetti';
                 conf.style.position = 'fixed';
-                conf.style.width = '10px';
-                conf.style.height = '10px';
-                conf.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`;
+                conf.style.width = '6px';
+                conf.style.height = '12px';
+                conf.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 60%)`;
                 conf.style.left = Math.random() * 100 + 'vw';
-                conf.style.top = '-10px';
+                conf.style.top = '-20px';
                 conf.style.zIndex = '100';
-                conf.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                conf.style.animation = `fall ${Math.random() * 2 + 3}s linear forwards`;
                 document.body.appendChild(conf);
-                
                 setTimeout(() => conf.remove(), 5000);
             }
         }
         
-        // Add CSS for confetti dynamically or ensure it exists
         const style = document.createElement('style');
         style.innerHTML = `
             @keyframes fall {
@@ -936,8 +950,10 @@
         `;
         document.head.appendChild(style);
         
+        // Init
         initTower();
         updateLeaderboardUI();
+        selectDifficulty(3);
 
     </script>
 </body>

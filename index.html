@@ -2,8 +2,21 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>台北101單字攀登王 - 極致夜景版</title>
+    
+    <!-- PWA & Mobile Fullscreen Settings -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="application-name" content="101單字王">
+    <meta name="apple-mobile-web-app-title" content="101單字王">
+
+    <!-- App Icon (Data URI SVG) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f172a'/%3E%3Cpath d='M256 64L160 448H352L256 64Z' fill='%231e4e54' stroke='%23fbbf24' stroke-width='20'/%3E%3Cpath d='M256 64V448' stroke='%23fbbf24' stroke-width='10'/%3E%3Ctext x='50%25' y='85%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='100' fill='%23fbbf24'%3E101%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' style='background-color:%230f172a'%3E%3Crect width='512' height='512' fill='%230f172a'/%3E%3Cpath d='M256 64L170 448H342L256 64Z' fill='%231e4e54' stroke='%23fbbf24' stroke-width='20'/%3E%3Cpath d='M256 64V448' stroke='%23fbbf24' stroke-width='10'/%3E%3Ctext x='50%25' y='85%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='120' fill='%23fbbf24'%3E101%3C/text%3E%3C/svg%3E">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <style>
@@ -18,6 +31,9 @@
             color: #f1f5f9;
             height: 100vh;
             height: 100dvh;
+            /* 修正 iOS PWA 頂部安全區域 */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         /* --- 背景動畫 --- */
@@ -183,7 +199,7 @@
         }
         .climber-avatar {
             width: 32px; height: 32px; /* 稍微縮小適應手機 */
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+            filter: drop-shadow(0 4px 6px rgba(239, 68, 68, 0.5)); /* 紅色陰影 */
         }
 
         /* --- UI 面板質感優化 --- */
@@ -541,9 +557,9 @@
                     climberHtml = `
                         <div id="climber" class="climber-avatar">
                             <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="18" cy="18" r="16" fill="#1e293b" stroke="#2dd4bf" stroke-width="2"/>
-                                <path d="M18 12C19.6569 12 21 10.6569 21 9C21 7.34315 19.6569 6 18 6C16.3431 6 15 7.34315 15 9C15 10.6569 16.3431 12 18 12Z" fill="#2dd4bf"/>
-                                <path d="M18 14C15.3333 14 10 15.3333 10 18V24H13V29L16 29V24H20V29L23 29V24H26V18C26 15.3333 20.6667 14 18 14Z" fill="#2dd4bf"/>
+                                <circle cx="18" cy="18" r="16" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
+                                <path d="M18 12C19.6569 12 21 10.6569 21 9C21 7.34315 19.6569 6 18 6C16.3431 6 15 7.34315 15 9C15 10.6569 16.3431 12 18 12Z" fill="#ef4444"/>
+                                <path d="M18 14C15.3333 14 10 15.3333 10 18V24H13V29L16 29V24H20V29L23 29V24H26V18C26 15.3333 20.6667 14 18 14Z" fill="#ef4444"/>
                             </svg>
                         </div>`;
                 }

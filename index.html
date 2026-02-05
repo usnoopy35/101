@@ -76,6 +76,9 @@
             padding-bottom: 20vh;
             width: 100%;
             perspective: 1000px;
+            /* iOS 渲染優化 */
+            transform: translateZ(0); 
+            -webkit-transform: translateZ(0);
         }
 
         /* 樓層樣式 - 強制適應窄欄位 */
@@ -196,6 +199,8 @@
         #climber {
             position: absolute; left: 50%; transform: translateX(-50%);
             z-index: 30; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            /* iOS 渲染優化 */
+            -webkit-transform: translateX(-50%) translateZ(0);
         }
         .climber-avatar {
             width: 32px; height: 32px; /* 稍微縮小適應手機 */
@@ -697,7 +702,8 @@
                 generateOptions(currentWord.en, 'en');
             } else {
                 questionText.textContent = currentWord.ch;
-                setTimeout(() => document.getElementById('answer-input').focus(), 100);
+                // iOS: 不要在 setTimeout 中調用 focus，這裡僅作為提示
+                // document.getElementById('answer-input').focus(); 
             }
             
             progressBar.style.width = ((currentFloor / maxFloor) * 100) + '%';
@@ -728,10 +734,11 @@
 
         function checkAnswer(selected, correct, btnElement) {
             if (selected === correct) {
-                handleCorrect();
+                // UI feedback
                 if (btnElement) {
                     btnElement.className = "bg-teal-500 text-white font-black py-2 px-3 rounded-xl shadow-[0_0_20px_rgba(20,184,166,0.6)] transition-all duration-300 text-sm md:text-lg h-full flex items-center justify-center transform scale-105 border border-teal-300";
                 }
+                handleCorrect();
             } else {
                 handleWrong();
                 if (btnElement) {
@@ -760,11 +767,11 @@
             }
         });
 
+        /* --- CRITICAL IOS FIXES --- */
         function handleCorrect() {
             showFeedback("EXCELLENT", "text-teal-300 text-shadow-[0_0_10px_rgba(45,212,191,0.8)]");
-            speakText(currentWord.en);
-            moveClimberUp();
             
+            // 1. 下一題邏輯優先執行 (使用 setTimeout 確保渲染週期)
             setTimeout(() => {
                 if (currentFloor < maxFloor) {
                     nextQuestion();
@@ -772,6 +779,18 @@
                     gameOver(true);
                 }
             }, 800);
+
+            // 2. 語音嘗試播放 (Wrap in try-catch to prevent crash)
+            try {
+                speakText(currentWord.en);
+            } catch (e) {
+                console.warn("Speech synthesis failed", e);
+            }
+
+            // 3. 視覺移動 (Safe execution)
+            requestAnimationFrame(() => {
+                moveClimberUp();
+            });
         }
 
         function handleWrong() {
@@ -792,7 +811,8 @@
         function moveClimberUp() {
             const currentFloorEl = document.getElementById(`floor-${currentFloor}`);
             const climber = document.getElementById('climber');
-            currentFloorEl.classList.remove('active');
+            
+            if(currentFloorEl) currentFloorEl.classList.remove('active');
             
             currentFloor++;
             updateFloorDisplay();
@@ -801,7 +821,13 @@
             if (nextFloorEl) {
                 nextFloorEl.appendChild(climber);
                 nextFloorEl.classList.add('active');
-                nextFloorEl.scrollIntoView({behavior: "smooth", block: "center"});
+                
+                // --- IOS FIX: 使用 'auto' 而非 'smooth' ---
+                // 'smooth' scroll 在 iOS 上結合 DOM 變動時極易造成渲染卡死
+                nextFloorEl.scrollIntoView({
+                    behavior: "auto", 
+                    block: "center"
+                });
             }
         }
 
@@ -847,6 +873,7 @@
             gameHud.classList.add('hidden');
             endScreen.classList.remove('hidden');
             
+            // iOS fix: focus might not work here without user tap, but safe to try
             setTimeout(() => nameInput.focus(), 500);
         }
 
@@ -937,11 +964,20 @@
 
         function speakText(text) {
             if (!isSoundOn) return;
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            utterance.rate = 0.9; 
-            window.speechSynthesis.speak(utterance);
+            // IOS FIX: Try-catch 避免語音 API 錯誤卡死程式
+            try {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.9; 
+                    // 避免 utterance 被垃圾回收導致不發聲，雖非此 bug 主因，但為好習慣
+                    window.utteranceReference = utterance; 
+                    window.speechSynthesis.speak(utterance);
+                }
+            } catch (e) {
+                console.error("Audio playback error:", e);
+            }
         }
 
         function createConfetti() {
